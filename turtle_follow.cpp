@@ -34,5 +34,3 @@
     
 //Use ar tag pose + lidar to path plan to ar tag
 //pure pursuit to follow
-
-// hi
