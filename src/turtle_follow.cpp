@@ -1,3 +1,11 @@
+#include "turtle_follow.h"
+#include "ros/ros.h"
+#include "ar_track_alvar/AlvarMarkers"
+
+//Check message types in cmake and package.xml
+
+//Maybe make a file to auto download dependencies like the ar_tags package
+
 //Receive ar tag positions from ROS subscriber
 
 //Save x position  (y and z not needed) into variables
@@ -9,7 +17,7 @@
 //Use car code to determine steering direction.
 //Might need to change speed depending on turning amount
 
-//Use lidar to check distance to robot
+//Use lidar to check distance to robot //compare to ar tag distance withing tolerance. //This might be dodgy
 
 //If within a certain range then stop
 
