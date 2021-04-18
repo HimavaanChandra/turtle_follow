@@ -2,6 +2,11 @@
 #include "turtle_follow.h"
 //Check message types and packages in cmake and package.xml---------------------------
 
+
+
+
+//For turtlebot ar tags camera will have to be on usb_cam unless can change ar topic or echo topic
+
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "turtle_follow");

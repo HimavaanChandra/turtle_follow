@@ -107,6 +107,9 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
         angular_velocity_ *= 0.99;
         linear_velocity_ *= 0.99;
     }
+
+    robot_.control_.linear.x = linear_velocity_;
+    robot_.control_.angular.z = angular_velocity_;
     
 }
 
