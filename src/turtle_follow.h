@@ -38,22 +38,20 @@ private:
     void tagCallback(const ar_track_alvar::AlvarMarkerConstPtr &msg);
     void laserCallback(const sensor_msgs::LaserScanConstPtr &msg);
     void odomCallback(const nav_msgs::OdometryConstPtr &msg);
-
-    double robotx_;//Might not be needed------------------------------------------------------
-    double roboty_;//Might not be needed------------------------------------------------------
+    bool obstructionDetection();
+    void basicController(double centreDistance, double range);
 
     ros::Subscriber odomSub_;
     ros::Subscriber laserSub_;
     ros::Subscriber tagSub_;
     ros::Publisher cmd_vel_pub_;
     geometry_msgs::Pose tagPose;
-    geometry_msgs::Pose robotPose;
+    
 
     struct Robot
     {
-        double x_;
-        double y_;
-        double angle_;
+        const double radius_ = 0.22;
+        const double max_vel_ = 0.22;
         bool obstacle_;
         geometry_msgs::Twist control_;
         std::vector<float> ranges_;
