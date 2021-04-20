@@ -1,6 +1,7 @@
 # AR Tag Spawning
 
 **Credit and Acknowledgements**
+
 All the credit for the logic for spawning the AR tag belongs to Miguel Angel. The video tutorial I followed is linked below:
 
 https://www.youtube.com/watch?v=WDhIaVOUwsk&t=1s
