@@ -40,6 +40,7 @@ private:
     void odomCallback(const nav_msgs::OdometryConstPtr &msg);
     bool obstructionDetection();
     void basicController(double centreDistance, double range);
+    void purePursuit(double centreDistance, double range);
 
     ros::Subscriber odom_sub_;
     ros::Subscriber laser_sub_;
