@@ -34,6 +34,12 @@ void TurtleFollow::laserCallback(const sensor_msgs::LaserScanConstPtr &msg)
     robot_.ranges_ = msg->ranges;
 }
 
+//May not need------------------------------------------------------------------------
+void TurtleFollow::odomCallback(const nav_msgs::OdometryConstPtr &msg)
+{
+  geometry_msgs::Pose pose = msg->pose.pose;
+}
+
 bool TurtleFollow::obstructionDetection()
 {
   if (robot_.ranges_.size() > 0)
