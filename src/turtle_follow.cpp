@@ -12,9 +12,9 @@ TurtleFollow::TurtleFollow(ros::NodeHandle nh)
 
     //Topic robot_0 might be different------------------------------------------------------
     //Passing by reference (&TurtleFollow) might be a problem-------------------------------
-    odomSub_ = nh_.subscribe("/robot_0/odom", 10, &TurtleFollow::odomCallback, this);
-    laserSub_ = nh_.subscribe("/robot_0/base_scan", 10, &TurtleFollow::laserCallback, this);
-    tagSub_ = nh_.subscribe("/ar_pose_marker", 10, &TurtleFollow::robotControl, this);
+    odom_sub_ = nh_.subscribe("/robot_0/odom", 10, &TurtleFollow::odomCallback, this);
+    laser_sub_ = nh_.subscribe("/robot_0/base_scan", 10, &TurtleFollow::laserCallback, this);
+    tag_sub_ = nh_.subscribe("/ar_pose_marker", 10, &TurtleFollow::robotControl, this);
 
     //Topic robot_0 might be different------------------------------------------------------
     cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/robot_0/cmd_vel", 1);
@@ -26,7 +26,7 @@ TurtleFollow::~TurtleFollow()
 
 void TurtleFollow::tagCallback(const ar_track_alvar::AlvarMarkerConstPtr &msg)
 {
-    tagPose = msg->pose.pose;
+    tag_pose_ = msg->pose.pose;
 }
 
 void TurtleFollow::laserCallback(const sensor_msgs::LaserScanConstPtr &msg)
@@ -134,10 +134,10 @@ void TurtleFollow::robotControl()
 
     //Only use 1
     //Basic controller
-    basicController(tagPose.x);
+    basicController(tag_pose_.x);
 
     //Pure pursuit controller //Tag pose z might be dodgy might have to check tolerance with lidar----------------
-    purePursuit(tagPose.x, tagPose.z);
+    purePursuit(tag_pose_.x, tag_pose_.z);
 
     //Use car code to determine steering direction.
     //Might need to change speed depending on turning amount

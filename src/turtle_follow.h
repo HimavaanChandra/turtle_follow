@@ -41,11 +41,11 @@ private:
     bool obstructionDetection();
     void basicController(double centreDistance, double range);
 
-    ros::Subscriber odomSub_;
-    ros::Subscriber laserSub_;
-    ros::Subscriber tagSub_;
+    ros::Subscriber odom_sub_;
+    ros::Subscriber laser_sub_;
+    ros::Subscriber tag_sub_;
     ros::Publisher cmd_vel_pub_;
-    geometry_msgs::Pose tagPose;
+    geometry_msgs::Pose tag_pose_;
     
 
     struct Robot
