@@ -41,6 +41,7 @@ private:
     bool obstructionDetection();
     void basicController(double centreDistance, double range);
     void purePursuit(double centreDistance, double range);
+    void visServo(double centreDistance);
 
     ros::Subscriber odom_sub_;
     ros::Subscriber laser_sub_;
