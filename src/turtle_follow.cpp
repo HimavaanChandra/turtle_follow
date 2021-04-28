@@ -121,7 +121,7 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
 
 void TurtleFollow::visServo(double centreDistance)
 {
-    // Image Based Visual Servoing 
+    // Visual Servoing 
     double linear_velocity_ = 0;
     double angular_velocity_ = 0;
 
@@ -129,7 +129,7 @@ void TurtleFollow::visServo(double centreDistance)
     x = tag_pose_.x;
     z = tag_pose_.z; 
 
-    // Find linear and angular velocity to navigate centre of AR tag ot centre of camera frame
+    // Find linear and angular velocity to navigate centre of AR tag to the centre of camera frame using visual servoing
 
     // Published to ros in robotControl
     robot_.control_.linear.x = linear_velocity_;
