@@ -10,7 +10,7 @@
     <arg name="yaw" default="0" />
     
     <arg name="urdf_robot_file" default="$(find ar_tag)/urdf/ar_1234.urdf" />
-    <arg name="robot_name" default="ar_2020" />
+    <arg name="robot_name" default="ar_1234" />
     
     <include file="$(find spawn_robot_tools_pkg)/launch/spawn_robot_urdf.launch">
         <arg name="x" value="$(arg x)" />
