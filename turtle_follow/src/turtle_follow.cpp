@@ -12,21 +12,25 @@ TurtleFollow::TurtleFollow(ros::NodeHandle nh)
 
     //Topic robot_0 might be different------------------------------------------------------
     //Passing by reference (&TurtleFollow) might be a problem-------------------------------
-    odom_sub_ = nh_.subscribe("/robot_0/odom", 10, &TurtleFollow::odomCallback, this);
-    laser_sub_ = nh_.subscribe("/robot_0/base_scan", 10, &TurtleFollow::laserCallback, this);
+    odom_sub_ = nh_.subscribe("/odom", 10, &TurtleFollow::odomCallback, this);
+    laser_sub_ = nh_.subscribe("/base_scan", 10, &TurtleFollow::laserCallback, this);
     tag_sub_ = nh_.subscribe("/ar_pose_marker", 10, &TurtleFollow::tagCallback, this);
 
     //Topic robot_0 might be different------------------------------------------------------
-    cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/robot_0/cmd_vel", 1);
+    cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
 }
 
 TurtleFollow::~TurtleFollow()
 {
 }
 
-void TurtleFollow::tagCallback(const ar_track_alvar_msgs::AlvarMarkerConstPtr &msg)
+void TurtleFollow::tagCallback(const ar_track_alvar_msgs::AlvarMarkersConstPtr &msg)
 {
-    tag_pose_ = msg->pose.pose;
+  // const struct ar_track_alvar_msgs::AlvarMarkers_<std::allocator<void> >
+  // ar_track_alvar_msgs::AlvarMarker[] markers = msg->markers;
+  // std::vector<ar_track_alvar_msgs::AlvarMarker> test = msg->markers;
+  tag_pose_ = msg->markers.at(0).pose.pose;
+  // tag_pose_ = msg->pose.pose;
 }
 
 void TurtleFollow::laserCallback(const sensor_msgs::LaserScanConstPtr &msg)

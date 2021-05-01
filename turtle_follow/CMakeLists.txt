@@ -39,7 +39,7 @@ INCLUDE_DIRS
 CATKIN_DEPENDS
 cv_bridge
 image_transport
-AlvarMarker
+AlvarMarkers
 roscpp
 sensor_msgs
 std_msgs

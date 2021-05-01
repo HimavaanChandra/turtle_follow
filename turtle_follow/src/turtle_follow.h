@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 
 //Remove ones that are not used
-#include "ar_track_alvar_msgs/AlvarMarker.h"
+#include "ar_track_alvar_msgs/AlvarMarkers.h"
 #include "geometry_msgs/Pose2D.h"
 #include "sensor_msgs/LaserScan.h"
 #include "nav_msgs/Odometry.h"
@@ -35,7 +35,7 @@ public:
     ros::NodeHandle nh_;
 
 private:
-    void tagCallback(const ar_track_alvar_msgs::AlvarMarkerConstPtr &msg);
+    void tagCallback(const ar_track_alvar_msgs::AlvarMarkersConstPtr &msg);
     void laserCallback(const sensor_msgs::LaserScanConstPtr &msg);
     void odomCallback(const nav_msgs::OdometryConstPtr &msg);
     bool obstructionDetection();
