@@ -1,16 +1,16 @@
 # AR Tag Spawning
 
-**Credit and Acknowledgements**
+## Credit and Acknowledgements
 
 All the credit for the logic for spawning the AR tag belongs to Miguel Angel. The video tutorial I followed is linked below:
 
 https://www.youtube.com/watch?v=WDhIaVOUwsk&t=1s
 
-**Prerequistes**
+## Prerequistes
 * Gazebo installed. Preferrably with turtlebot packages installed
 * Possibily catkin_tools
 
-**Procedure**
+## Procedure
 1. Copy the folders "ar\_tag" and "spawn\_robot\_tools_pkg" into the src folder in the workspace that you intend to run Gazebo on. 
 2. Open terminal and navigate to the workspace and run the command "catkin build"
    1. catkin_make might work but I haven't tested

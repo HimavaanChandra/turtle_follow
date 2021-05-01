@@ -10,11 +10,12 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   roslib # Needed for ros::package::getPath
-  
-  
-  a4_setup
+  geometry_msgs
+  nav_msgs
+  tf
   cv_bridge
   image_transport
+  ar_track_alvar_msgs
 )
 
 ## System dependencies are found with CMake's conventions
