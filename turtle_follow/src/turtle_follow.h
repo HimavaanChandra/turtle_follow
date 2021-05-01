@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 
 //Remove ones that are not used
-#include "ar_track_alvar/AlvarMarker.h"
+#include "ar_track_alvar/AlvarMarkers.h"
 #include "geometry_msgs/Pose2D.h"
 #include "sensor_msgs/LaserScan.h"
 #include "nav_msgs/Odometry.h"
