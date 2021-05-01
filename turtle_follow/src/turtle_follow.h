@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 
 //Remove ones that are not used
-#include "ar_track_alvar/AlvarMarkers.h"
+#include "ar_track_alvar_msgs/AlvarMarker.h"
 #include "geometry_msgs/Pose2D.h"
 #include "sensor_msgs/LaserScan.h"
 #include "nav_msgs/Odometry.h"
@@ -15,12 +15,12 @@
 //Cleanup--------------------------------------------------------------
 #include <iostream>
 #include <string>
-// #include <thread>
-// #include <chrono>
-// #include <mutex>
+#include <thread>
+#include <chrono>
+#include <mutex>
 #include <random>
 #include <cmath>
-// #include <condition_variable>
+#include <condition_variable>
 #include <vector>
 
 //Delete what is not used-------------------------------------------------
@@ -35,12 +35,12 @@ public:
     ros::NodeHandle nh_;
 
 private:
-    void tagCallback(const ar_track_alvar::AlvarMarkerConstPtr &msg);
+    void tagCallback(const ar_track_alvar_msgs::AlvarMarkerConstPtr &msg);
     void laserCallback(const sensor_msgs::LaserScanConstPtr &msg);
     void odomCallback(const nav_msgs::OdometryConstPtr &msg);
     bool obstructionDetection();
     void detection(void);
-    void basicController(double centreDistance, double range);
+    void basicController(double centreDistance);
     void purePursuit(double centreDistance, double range);
     void visServo(double centreDistance);
 
@@ -62,4 +62,4 @@ private:
     };
 
     Robot robot_;
-}
+};

@@ -14,7 +14,7 @@ TurtleFollow::TurtleFollow(ros::NodeHandle nh)
     //Passing by reference (&TurtleFollow) might be a problem-------------------------------
     odom_sub_ = nh_.subscribe("/robot_0/odom", 10, &TurtleFollow::odomCallback, this);
     laser_sub_ = nh_.subscribe("/robot_0/base_scan", 10, &TurtleFollow::laserCallback, this);
-    tag_sub_ = nh_.subscribe("/ar_pose_marker", 10, &TurtleFollow::robotControl, this);
+    tag_sub_ = nh_.subscribe("/ar_pose_marker", 10, &TurtleFollow::tagCallback, this);
 
     //Topic robot_0 might be different------------------------------------------------------
     cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/robot_0/cmd_vel", 1);
@@ -24,7 +24,7 @@ TurtleFollow::~TurtleFollow()
 {
 }
 
-void TurtleFollow::tagCallback(const ar_track_alvar::AlvarMarkerConstPtr &msg)
+void TurtleFollow::tagCallback(const ar_track_alvar_msgs::AlvarMarkerConstPtr &msg)
 {
     tag_pose_ = msg->pose.pose;
 }
@@ -117,6 +117,7 @@ void TurtleFollow::detection(void)
     // cmd_vel_pub_.publish(twist); //Needs to be redefined?------------------------------
 
   }
+}
 
 
 
@@ -181,18 +182,18 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
 void TurtleFollow::visServo(double centreDistance)
 {
     // Visual Servoing 
-    double linear_velocity_ = 0;
-    double angular_velocity_ = 0;
+    // double linear_velocity_ = 0;
+    // double angular_velocity_ = 0;
 
-    // Find the centre of the AR tag 
-    x = tag_pose_.x;
-    z = tag_pose_.z; 
+    // // Find the centre of the AR tag 
+    // x = tag_pose_.x;
+    // z = tag_pose_.z; 
 
-    // Find linear and angular velocity to navigate centre of AR tag to the centre of camera frame using visual servoing
+    // // Find linear and angular velocity to navigate centre of AR tag to the centre of camera frame using visual servoing
 
-    // Published to ros in robotControl
-    robot_.control_.linear.x = linear_velocity_;
-    robot_.control_.angular.z = angular_velocity_;
+    // // Published to ros in robotControl
+    // robot_.control_.linear.x = linear_velocity_;
+    // robot_.control_.angular.z = angular_velocity_;
 }
 
 
@@ -216,10 +217,10 @@ void TurtleFollow::robotControl()
 
     //Only use 1
     //Basic controller
-    basicController(tag_pose_.x);
+    basicController(tag_pose_.position.x);
 
     //Pure pursuit controller //Tag pose z might be dodgy might have to check tolerance with lidar----------------
-    purePursuit(tag_pose_.x, tag_pose_.z);
+    purePursuit(tag_pose_.position.x, tag_pose_.position.z);
 
     //Use car code to determine steering direction.
     //Might need to change speed depending on turning amount

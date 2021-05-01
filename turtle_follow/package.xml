@@ -17,7 +17,8 @@
   <build_depend>message_generation</build_depend>
   <build_depend>cv_bridge</build_depend>
   <build_depend>image_transport</build_depend>
-  <build_depend>ar_track_alvar </build_depend>
+  <build_depend>AlvarMarker</build_depend>
+  <build_depend>tf</build_depend>
 
   <run_depend>roscpp</run_depend>
   <run_depend>sensor_msgs</run_depend>
@@ -25,7 +26,9 @@
   <run_depend>message_runtime</run_depend>
   <run_depend>cv_bridge</run_depend>
   <run_depend>image_transport</run_depend>
-  <run_depend>ar_track_alvar</run_depend>
+  <run_depend>AlvarMarker</run_depend>
+  <!--Tom's says exec not run --> 
+  <run_depend>tf</run_depend>
   
   <!-- The export tag contains other, unspecified, tags -->
   <export>
