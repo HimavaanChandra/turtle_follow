@@ -8,15 +8,12 @@
 TurtleFollow::TurtleFollow(ros::NodeHandle nh)
     : nh_(nh)
 {
-    //need to initialise all the variable values
-
-    //Topic robot_0 might be different------------------------------------------------------
+    //need to initialise all the variable values-------------------------------------------------------------
     //Passing by reference (&TurtleFollow) might be a problem-------------------------------
     odom_sub_ = nh_.subscribe("/odom", 10, &TurtleFollow::odomCallback, this);
     laser_sub_ = nh_.subscribe("/base_scan", 10, &TurtleFollow::laserCallback, this);
     tag_sub_ = nh_.subscribe("/ar_pose_marker", 10, &TurtleFollow::tagCallback, this);
 
-    //Topic robot_0 might be different------------------------------------------------------
     cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
 }
 
@@ -65,6 +62,7 @@ bool TurtleFollow::obstructionDetection()
   return robot_.obstacle_;
 }
 
+//Delete if not used-------------------------------------------------------------------------------------------------
 void TurtleFollow::detection(void)
 {
 	//Convert image
