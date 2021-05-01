@@ -61,6 +61,65 @@ bool TurtleFollow::obstructionDetection()
   return robot_.obstacle_;
 }
 
+void TurtleFollow::detection(void)
+{
+	//Convert image
+	//BGR2HSV
+  cv::Mat image_ = cv::imread("/home/ros/catkin_ws/src/maze_navigating_robot/imageTuning/image2.jpg"); //Remove and replace with topic/imagecallback
+  // cv::Mat image_ = &image; How do I access &image?-----------------------------------------------------------------------------
+  cv::Mat hsv; //Make class variable?/Only use one vartaiable to save time for all hsv redMask edges etc--------------------------
+	cv::cvtColor(image_, hsv, cv::COLOR_BGR2HSV);
+
+	//https://docs.opencv.org/3.4/da/d97/tutorial_threshold_inRange.html
+	//Threshold to isolate Red
+	cv::Mat redMask;
+	//Sim
+	// cv::inRange(hsv, cv::Scalar(0, 127, 50), cv::Scalar(6, 255, 255), redMask);
+	//Real Robot
+	cv::inRange(hsv, cv::Scalar(0, 127, 50), cv::Scalar(6, 255, 255), redMask);
+
+	//Draw box around red blob
+	cv::Mat edges;
+	cv::Canny(redMask, edges, 400, 1400, 3);
+
+	//Find contours: https://docs.opencv.org/master/d4/d73/tutorial_py_contours_begin.html
+	std::vector<std::vector<cv::Point> > contours;
+	cv::findContours(edges, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+	//Draw contours
+	cv::drawContours(image_, contours,  0, cv::Scalar(0, 255, 0), 2);
+
+	//Get centre position of blob
+	//Get moments of contours
+	cv::Moments m = cv::moments(contours[0], true);
+	//centre of blob: https://www.pyimagesearch.com/2016/02/01/opencv-center-of-contour/
+	int cx = m.m10 / m.m00;
+	int cy = m.m01 / m.m00;
+  cv::Point pt(cx, cy);
+  cv::circle(image_, pt, 3, CV_RGB(0, 255, 0), 1);
+
+	double area = cv::contourArea(contours[0]);
+
+  cv::Size size = image_.size();
+  double frameArea = size.width*size.height;
+  std::cout << "Contour Area: " << area << std::endl; //--------------------------------------------------------
+  std::cout << "Frame Area: " << frameArea << std::endl; //-----------------------------------------------------
+  //Do ratio comparison then initiate takeover?
+  double ratio  = area/frameArea;
+  int cutoff=0;//Adjust------------------------------
+  if (ratio > cutoff)
+  {
+    //Take over control till ratio is certain amount. - This might need to be in higher loop so that values can be recalculated or not
+
+    //Set linear and angular velocity override
+    geometry_msgs::Twist twist{};
+    twist.angular.z = 0.;
+    twist.linear.x = 0;
+    // cmd_vel_pub_.publish(twist); //Needs to be redefined?------------------------------
+
+  }
+
+
+
 
 void TurtleFollow::basicController(double centreDistance)
 {

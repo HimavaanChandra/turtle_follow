@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 
 //Remove ones that are not used
-#include "ar_track_alvar/AlvarMarkers.h"
+#include "ar_track_alvar/AlvarMarker.h"
 #include "geometry_msgs/Pose2D.h"
 #include "sensor_msgs/LaserScan.h"
 #include "nav_msgs/Odometry.h"
@@ -39,6 +39,7 @@ private:
     void laserCallback(const sensor_msgs::LaserScanConstPtr &msg);
     void odomCallback(const nav_msgs::OdometryConstPtr &msg);
     bool obstructionDetection();
+    void detection(void);
     void basicController(double centreDistance, double range);
     void purePursuit(double centreDistance, double range);
     void visServo(double centreDistance);

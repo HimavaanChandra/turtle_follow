@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   cv_bridge
   image_transport
-  ar_track_alvar_msgs
+  ar_track_alvar
 )
 
 ## System dependencies are found with CMake's conventions
