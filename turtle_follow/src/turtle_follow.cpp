@@ -202,7 +202,7 @@ void TurtleFollow::visServo(double centreDistance)
 
 void TurtleFollow::robotControl()
 {
-  while (ros::ok)
+  while (ros::ok())
   {
     std::cout << "Robot Control" << std::endl;
     if (tag_)
@@ -227,5 +227,6 @@ void TurtleFollow::robotControl()
     //Need to add reversing if too close------------------------------------------------
 
     cmd_vel_pub_.publish(robot_.control_);
+    
   }
 }
