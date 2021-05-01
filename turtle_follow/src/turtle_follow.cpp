@@ -136,20 +136,20 @@ void TurtleFollow::basicController(double centreDistance)
   //Within tolerance
   if (centreDistance >= -0.1 && centreDistance <= 0.1)
   {
-    robot_.control_.linear.x = 0.22;
+    robot_.control_.linear.x = 0.10;
     robot_.control_.angular.z = 0;
   }
   //To the left
   else if (centreDistance < -0.1)
   {
     robot_.control_.linear.x = 0.11;
-    robot_.control_.angular.z = 1.4;
+    robot_.control_.angular.z = 0.5;
   }
   //To the right
   else if (centreDistance > 0.1)
   {
     robot_.control_.linear.x = 0.11;
-    robot_.control_.angular.z = -1.4;
+    robot_.control_.angular.z = -0.5;
   }
   //Do nothing
   else
@@ -259,6 +259,7 @@ void TurtleFollow::robotControl()
       robot_.control_.linear.x = 0;
       robot_.control_.angular.z = 0;
     }
+    //Need to add reversing if too close------------------------------------------------
 
     cmd_vel_pub_.publish(robot_.control_);
   }
