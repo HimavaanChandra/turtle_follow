@@ -49,7 +49,7 @@ private:
     ros::Subscriber tag_sub_;
     ros::Publisher cmd_vel_pub_;
     geometry_msgs::Pose tag_pose_;
-    
+    bool tag_;
 
     struct Robot
     {
