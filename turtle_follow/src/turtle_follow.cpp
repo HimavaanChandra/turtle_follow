@@ -204,33 +204,12 @@ void TurtleFollow::robotControl()
 {
   while (ros::ok)
   {
-    // target_x = centre_path[0][0] #-------------------------------------------------------------------------------------------------------------------
-    // distance_from_centre = target_x - columns/2
-    // turn_amount = np.round(np.interp(distance_from_centre, [-200, 200], [0.6, -0.6]), 3)
-    // control.drive.acceleration = speed
-    // control.drive.steering_angle = turn_amount
-
-    //This needs numpy so probs can't implement unless in cmath or openCV
-    // auto_steering = int(np.interp(distance_from_centre, [-200, 200], [0, 255]))
-
-    //Extremities
-    // if auto_steering > 255:
-    //     auto_steering = 255
-    // if auto_steering < 0:
-    //     auto_steering = 0
-
-    //Only use 1
     std::cout << "Robot Control" << std::endl;
-    //Basic controller
     if (tag_)
     {
       std::cout << "Tag Detected" << std::endl;
-      // robot_.control_.linear.x = 0;
-      // robot_.control_.angular.z = 0;
       basicController(tag_pose_.position.x);
-
-      //Pure pursuit controller //Tag pose z might be dodgy might have to check tolerance with lidar----------------
-      // purePursuit(tag_pose_.position.x, tag_pose_.position.z);
+      // purePursuit(tag_pose_.position.x, tag_pose_.position.z); //-------------------------------------------
     }
     else
     {
@@ -238,20 +217,6 @@ void TurtleFollow::robotControl()
       robot_.control_.linear.x = 0;
       robot_.control_.angular.z = 0.1;
     }
-
-    //Use car code to determine steering direction.
-    //Might need to change speed depending on turning amount
-
-    //Use lidar to check distance to robot //compare to ar tag distance withing tolerance. //This might be dodgy
-
-    //If within a certain range then stop
-
-    //If lower than range then reverse.
-
-    //Send steering commands to ROS
-
-    // robot_.control_.linear.x = 0;
-    // robot_.control_.angular.z = 0;
 
     if (obstructionDetection())
     {
@@ -264,17 +229,3 @@ void TurtleFollow::robotControl()
     cmd_vel_pub_.publish(robot_.control_);
   }
 }
-
-//-----Should implement-----
-//Use orientation to keep robot perpendicular
-
-//For locating bot in the first place --
-//Use image detection + lidar
-//If any lidar values change then:
-//Predict velocity
-//Predict future location
-//Turn to location
-//Image detection
-
-//Use ar tag pose + lidar to path plan to ar tag
-//pure pursuit to follow
