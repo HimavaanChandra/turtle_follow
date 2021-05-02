@@ -189,34 +189,37 @@ void TurtleFollow::visServo(double centreDistance)
   double linear_velocity_ = 0;
   double angular_velocity_ = 0;
   double lambda = 0.01;
-  Z = 10;
+  double Z = 10;
   double focalLength = 1.93;
   // double prinPoint = ... ;
 
   // Find the centre of the AR tag
-  x = tag_pose_.position.x;
-  y = tag_pose_.position.y;
+  double x = tag_pose_.position.x;
+  double y = tag_pose_.position.y;
   // z = tag_pose_.position.z;
+  arPose = [];
   arPose = pushback(x);
   arPose = pushback(y);
   // arPose = pushback(z);
-  oriW = tag_pose_.orientation.w;
-  oriX = tag_pose_.orientation.x;
-  oriY = tag_pose_.orientation.y;
-  oriZ = tag_pose_.orientation.z;
+  double oriW = tag_pose_.orientation.w;
+  double oriX = tag_pose_.orientation.x;
+  double oriY = tag_pose_.orientation.y;
+  double oriZ = tag_pose_.orientation.z;
   tf::Quaternion q(oriX, oriY, OriZ, oriW);
   tf::Matrix3x3 m(q);
   double roll, pitch, yaw;
   m.getRPY(roll, pitch, yaw);
   // When tag pose x = 0, AR tag is in centre of screen
-  target = 0;
+  double target = 0.0;
 
   // Find linear and angular velocity to navigate centre of AR tag to the centre of camera frame using visual servoing
-  imTarget = (target - prinPoint) / focalLength;
-  ar3D = (arPose - prinPoint) / focalLength;
+  double imTarget = (target - prinPoint) / focalLength;
+  double ar3D = (arPose - prinPoint) / focalLength;
 
   // Calculate velocity matrix
-  n = size(imTarge);
+  Lxi = [];
+  Lx = [];
+  double n = size(imTarge);
   for i = 1; i++; i < n;
     Lxi(1,1) = -1/Z;
     Lxi(1,2) = 0;
@@ -236,20 +239,21 @@ void TurtleFollow::visServo(double centreDistance)
   end;
 
   // Calculate position error
-  error2 = ar3D - imTarget;
-  error = reshape(e2.tranpose(), [], 1);
-  deltaError = -error * lambda;
+  double error2 = ar3D - imTarget;
+  double error = reshape(e2.tranpose(), [], 1);
+  double deltaError = -error * lambda;
 
   // Calculate velocity matrix
+  Lx2 = [];
   Lx2 = (Lx.tranpose() * Lx).inverse() * Lx.tranpose();
+  velocity = [];
   velocity = -lambda * Lx2 * error;
-  linear_velocity_ = velocity[1,1];
-  angular_velocity_ = velocity[2,1];
+  double linear_velocity_ = velocity[1,1];
+  double angular_velocity_ = velocity[2,1];
 
   // Published to ros in robotControl
   robot_.control_.linear.x = linear_velocity_;
   robot_.control_.angular.z = angular_velocity_;
-
 }
 
 void TurtleFollow::robotControl()
