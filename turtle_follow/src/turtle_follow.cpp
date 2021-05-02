@@ -186,18 +186,53 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
 void TurtleFollow::visServo(double centreDistance)
 {
   // Visual Servoing
-  // double linear_velocity_ = 0;
-  // double angular_velocity_ = 0;
+  double linear_velocity_ = 0;
+  double angular_velocity_ = 0;
+  double lambda = 0.01;
+  // Y = ... ;
+  // Z = ... ;
+  // double focalLength = ... ;
+  // double prinPoint = ... ;
 
-  // // Find the centre of the AR tag
-  // x = tag_pose_.x;
-  // z = tag_pose_.z;
+  // Find the centre of the AR tag
+  x = tag_pose_.position.x;
+  // y = tag_pose_.position.y;
+  // z = tag_pose_.position.z;
+  arPose = x;
+  // oriW = tag_pose_.orientation.w;
+  // oriX = tag_pose_.orientation.x;
+  // oriY = tag_pose_.orientation.y;
+  // oriZ = tag_pose_.orientation.z;
+  // tf::Quaternion q(oriX, oriY, OriZ, oriW);
+  // tf::Matrix3x3 m(q);
+  // double roll, pitch, yaw;
+  // m.getRPY(roll, pitch, yaw);
+  // When tag pose x = 0, AR tag is in centre of screen
+  target = 0;
 
-  // // Find linear and angular velocity to navigate centre of AR tag to the centre of camera frame using visual servoing
+  // Find linear and angular velocity to navigate centre of AR tag to the centre of camera frame using visual servoing
+  // imTarget = (target-prinPoint)/focalLength;
+  // ar3D = (arPose-prinPoint)/focalLength;
 
-  // // Published to ros in robotControl
+  // Lx = [];
+  // for i=1:n;
+  //     Lxi = FuncLx(imTarget,Y,Z);
+  //     Lx = [Lx;Lxi];
+  // end
+
+  // error2 = ar3D-imTarget;
+  // error = reshape(e2',[],1);
+  // deltaError = -error * lambda;
+
+  // Lx2 = inv(Lx'*Lx)*Lx';
+  // velocity = -l*Lx2*e
+  // linear_velocity_ = velocity[1,1];
+  // angular_velocity_ = velocity[2,1];
+
+  // Published to ros in robotControl
   // robot_.control_.linear.x = linear_velocity_;
   // robot_.control_.angular.z = angular_velocity_;
+
 }
 
 void TurtleFollow::robotControl()
