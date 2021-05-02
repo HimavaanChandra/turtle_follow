@@ -22,6 +22,7 @@
 #include <cmath>
 #include <condition_variable>
 #include <vector>
+#include <Eigen>
 
 //Delete what is not used-------------------------------------------------
 class TurtleFollow
