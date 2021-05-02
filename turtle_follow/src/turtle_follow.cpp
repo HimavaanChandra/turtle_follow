@@ -216,8 +216,21 @@ void TurtleFollow::visServo(double centreDistance)
 
   // Lx = [];
   // for i=1:n;
-  //     Lxi = FuncLx(imTarget,Y,Z);
-  //     Lx = [Lx;Lxi];
+    // Lxi(1,1) = -1/Z;
+    // Lxi(1,2) = 0;
+    // Lxi(1,3) = x/Z;
+    // Lxi(1,4) = x*y;
+    // Lxi(1,5) = -(1+x^2);
+    // Lxi(1,6) = y;
+
+    // Lxi(2,1) = 0;
+    // Lxi(2,2) = -1/Z;
+    // Lxi(2,3) = y/Z;
+    // Lxi(2,4) = 1+y^2;
+    // Lxi(2,5) = -x*y;
+    // Lxi(2,6) = -x;   
+
+    // Lx = [Lx;Lxi];
   // end
 
   // error2 = ar3D-imTarget;
