@@ -185,75 +185,75 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
 
 void TurtleFollow::visServo(double centreDistance)
 {
-  // Visual Servoing
-  double linear_velocity_ = 0;
-  double angular_velocity_ = 0;
-  double lambda = 0.01;
-  double Z = 10;
-  double focalLength = 1.93;
-  // double prinPoint = ... ;
+  // // Visual Servoing
+  // double linear_velocity_ = 0;
+  // double angular_velocity_ = 0;
+  // double lambda = 0.01;
+  // double Z = 10;
+  // double focalLength = 1.93;
+  // // double prinPoint = ... ;
 
-  // Find the centre of the AR tag
-  double x = tag_pose_.position.x;
-  double y = tag_pose_.position.y;
-  // z = tag_pose_.position.z;
-  arPose = [];
-  arPose = pushback(x);
-  arPose = pushback(y);
-  // arPose = pushback(z);
-  double oriW = tag_pose_.orientation.w;
-  double oriX = tag_pose_.orientation.x;
-  double oriY = tag_pose_.orientation.y;
-  double oriZ = tag_pose_.orientation.z;
-  tf::Quaternion q(oriX, oriY, OriZ, oriW);
-  tf::Matrix3x3 m(q);
-  double roll, pitch, yaw;
-  m.getRPY(roll, pitch, yaw);
-  // When tag pose x = 0, AR tag is in centre of screen
-  double target = 0.0;
+  // // Find the centre of the AR tag
+  // double x = tag_pose_.position.x;
+  // double y = tag_pose_.position.y;
+  // // z = tag_pose_.position.z;
+  // cv::Mat arPose;
+  // arPose = pushback(x);
+  // arPose = pushback(y);
+  // // arPose = pushback(z);
+  // double oriW = tag_pose_.orientation.w;
+  // double oriX = tag_pose_.orientation.x;
+  // double oriY = tag_pose_.orientation.y;
+  // double oriZ = tag_pose_.orientation.z;
+  // tf::Quaternion q(oriX, oriY, OriZ, oriW);
+  // tf::Matrix3x3 m(q);
+  // double roll, pitch, yaw;
+  // m.getRPY(roll, pitch, yaw);
+  // // When tag pose x = 0, AR tag is in centre of screen
+  // double target = 0.0;
 
-  // Find linear and angular velocity to navigate centre of AR tag to the centre of camera frame using visual servoing
-  double imTarget = (target - prinPoint) / focalLength;
-  double ar3D = (arPose - prinPoint) / focalLength;
+  // // Find linear and angular velocity to navigate centre of AR tag to the centre of camera frame using visual servoing
+  // double imTarget = (target - prinPoint) / focalLength;
+  // double ar3D = (arPose - prinPoint) / focalLength;
 
-  // Calculate velocity matrix
-  Lxi = [];
-  Lx = [];
-  double n = size(imTarge);
-  for i = 1; i++; i < n;
-    Lxi(1,1) = -1/Z;
-    Lxi(1,2) = 0;
-    Lxi(1,3) = x/Z;
-    Lxi(1,4) = x*y;
-    Lxi(1,5) = -(1+x^2);
-    Lxi(1,6) = y;
+  // // Calculate velocity matrix
+  // cv::Mat Lxi;
+  // cv::Mat Lx;
+  // double n = size(imTarget);
+  // for i = 1; i++; i < n;
+  //   Lxi(1,1) = -1/Z;
+  //   Lxi(1,2) = 0;
+  //   Lxi(1,3) = x/Z;
+  //   Lxi(1,4) = x*y;
+  //   Lxi(1,5) = -(1+x^2);
+  //   Lxi(1,6) = y;
 
-    Lxi(2,1) = 0;
-    Lxi(2,2) = -1/Z;
-    Lxi(2,3) = y/Z;
-    Lxi(2,4) = 1+y^2;
-    Lxi(2,5) = -x*y;
-    Lxi(2,6) = -x;   
+  //   Lxi(2,1) = 0;
+  //   Lxi(2,2) = -1/Z;
+  //   Lxi(2,3) = y/Z;
+  //   Lxi(2,4) = 1+y^2;
+  //   Lxi(2,5) = -x*y;
+  //   Lxi(2,6) = -x;   
 
-    Lx = [Lx;Lxi];
-  end;
+  //   Lx = [Lx;Lxi];
+  // end;
 
-  // Calculate position error
-  double error2 = ar3D - imTarget;
-  double error = reshape(e2.tranpose(), [], 1);
-  double deltaError = -error * lambda;
+  // // Calculate position error
+  // double error2 = ar3D - imTarget;
+  // double error = reshape(e2.t(), [], 1);
+  // double deltaError = -error * lambda;
 
-  // Calculate velocity matrix
-  Lx2 = [];
-  Lx2 = (Lx.tranpose() * Lx).inverse() * Lx.tranpose();
-  velocity = [];
-  velocity = -lambda * Lx2 * error;
-  double linear_velocity_ = velocity[1,1];
-  double angular_velocity_ = velocity[2,1];
+  // // Calculate velocity matrix
+  // cv::Mat Lx2;
+  // Lx2 = pow((Lx.t() * Lx), -1) * Lx.t();
+  // cv::Mat velocity;
+  // velocity = -lambda * Lx2 * error;
+  // double linear_velocity_ = velocity[1,1];
+  // double angular_velocity_ = velocity[2,1];
 
-  // Published to ros in robotControl
-  robot_.control_.linear.x = linear_velocity_;
-  robot_.control_.angular.z = angular_velocity_;
+  // // Published to ros in robotControl
+  // robot_.control_.linear.x = linear_velocity_;
+  // robot_.control_.angular.z = angular_velocity_;
 }
 
 void TurtleFollow::robotControl()
