@@ -27,7 +27,6 @@
   <run_depend>cv_bridge</run_depend>
   <run_depend>image_transport</run_depend>
   <run_depend>AlvarMarkers</run_depend>
-  <!--Tom's says exec not run --> 
   <run_depend>tf</run_depend>
   
   <!-- The export tag contains other, unspecified, tags -->
