@@ -219,8 +219,8 @@ void TurtleFollow::visServo(double centreDistance)
   cv::Mat ar3D = (arPose - prinPoint) / focalLength;
 
   // Calculate velocity matrix/feature Jacobian
-  cv::Mat Lxi;
-  cv::Mat Lx; //Make vector of matricies then just to a pushback -----------------------------------------------------------------------------
+  cv::Mat Lxi(2, 6); // Is this how you set the size of a matrix ?? I'm struggling to find an example that I understand --------------------
+  std::vector<cv::Mat> Lx;
   double n = size(imTarget);
   for (int i = 0; i < n; i++)
   {
@@ -239,12 +239,13 @@ void TurtleFollow::visServo(double centreDistance)
     Lxi[2, 5] = -x * y;
     Lxi[2, 6] = -x;
 
-    Lx = [Lx; Lxi];
+    Lx.pushback(Lxi);
   }
 
   // Calculate position error
   cv::Mat error2 = ar3D - imTarget;
-  cv::Mat error = cv::reshape(error2.t(), [], 1); //Look up the function ----------------------------------------------------------------------
+  std::vector<double> error;
+  error = cv::Mat::reshape(1, 6); // I'm not sure if this is right still tbh ??? -------------------------------------------------------------
   cv::Mat deltaError = -error * lambda;
 
   // Calculate velocity matrix
