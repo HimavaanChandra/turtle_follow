@@ -55,7 +55,7 @@ bool TurtleFollow::obstructionDetection()
     for (unsigned int i = 0; i < robot_.ranges_.size(); i++)
     {
       //The +-25 is the window of detection -- Can move this to the for loop above to make neater------------------------------------------------
-      if ((robot_.ranges_.at(i) < robot_.radius_ + 0.2) && (((i>= (robot_.ranges_.size() - 15)) && i<= robot_.ranges_.size()) || (i>= 0 && i<= 15)))
+      if ((robot_.ranges_.at(i) < robot_.radius_ + 0.2) && (((i >= (robot_.ranges_.size() - 15)) && i <= robot_.ranges_.size()) || (i >= 0 && i <= 15)))
       {
         ROS_INFO_STREAM("Obstruction Ahead!");
         robot_.obstacle_ = true;
@@ -193,8 +193,6 @@ void TurtleFollow::visServo(double centreDistance)
   cv::Mat focalLength = [1408.83; 1409.15];
   cv::Mat prinPoint = [980.52; 521.50];
 
-  // Transform ros ar to camera frame
-
   // Find the centre of the AR tag
   double x = tag_pose_.position.z;
   double y = tag_pose_.position.x;
@@ -212,7 +210,9 @@ void TurtleFollow::visServo(double centreDistance)
   // When tag pose x = 0, AR tag is in centre of screen
   // Tag pose x is y camera
   // Tag pose z is x camera
-  cv::Mat target = [x; y; Z; 1]; //Might need to change Z to lowercase z if followiing is not working
+  cv::Mat target = [x; y; Z; 1]; //Might need to change Z to lowercase z if followiing is not working ----------------------------------------
+
+  // Transform ros ar to camera frame --------------------------------------------------------------------------------------------------------
 
   // Find linear and angular velocity to navigate centre of AR tag to the centre of camera frame using visual servoing
   cv::Mat imTarget = (target - prinPoint) / focalLength;
@@ -220,31 +220,31 @@ void TurtleFollow::visServo(double centreDistance)
 
   // Calculate velocity matrix/feature Jacobian
   cv::Mat Lxi;
-  cv::Mat Lx; //Make vector of matricies then just to a pushback
+  cv::Mat Lx; //Make vector of matricies then just to a pushback -----------------------------------------------------------------------------
   double n = size(imTarget);
-  for (int i=0;i<n;i++)
+  for (int i = 0; i < n; i++)
   {
-    //Circular brackets wont work, [] in c++, also u r accessing positions that arent defined/set yet
-    Lxi(1,1) = -1/Z;
-    Lxi(1,2) = 0;
-    Lxi(1,3) = x/Z;
-    Lxi(1,4) = x*y;
-    Lxi(1,5) = -(1+x^2);
-    Lxi(1,6) = y;
+    // You are accessing positions that arent defined/set yet --------------------------------------------------------------------------------
+    Lxi[1, 1] = -1 / Z;
+    Lxi[1, 2] = 0;
+    Lxi[1, 3] = x / Z;
+    Lxi[1, 4] = x * y;
+    Lxi[1, 5] = -(1 + x ^ 2);
+    Lxi[1, 6] = y;
 
-    Lxi(2,1) = 0;
-    Lxi(2,2) = -1/Z;
-    Lxi(2,3) = y/Z;
-    Lxi(2,4) = 1+y^2;
-    Lxi(2,5) = -x*y;
-    Lxi(2,6) = -x;   
+    Lxi[2, 1] = 0;
+    Lxi[2, 2] = -1 / Z;
+    Lxi[2, 3] = y / Z;
+    Lxi[2, 4] = 1 + y ^ 2;
+    Lxi[2, 5] = -x * y;
+    Lxi[2, 6] = -x;
 
-    Lx = [Lx;Lxi];
+    Lx = [Lx; Lxi];
   }
 
   // Calculate position error
   cv::Mat error2 = ar3D - imTarget;
-  cv::Mat error = cv::reshape(error2.t(), [], 1); //Look up the function
+  cv::Mat error = cv::reshape(error2.t(), [], 1); //Look up the function ----------------------------------------------------------------------
   cv::Mat deltaError = -error * lambda;
 
   // Calculate velocity matrix
@@ -252,8 +252,8 @@ void TurtleFollow::visServo(double centreDistance)
   cv::Mat Lx2 = pow((Lx.t() * Lx), -1) * Lx.t();
   cv::Mat velocity;
   cv::Mat velocity = -lambda * Lx2 * error;
-  double linear_velocity_ = velocity[1,1];
-  double angular_velocity_ = velocity[2,1];
+  double linear_velocity_ = velocity[1, 1];
+  double angular_velocity_ = velocity[2, 1];
 
   // Published to ros in robotControl
   robot_.control_.linear.x = linear_velocity_;
@@ -287,6 +287,5 @@ void TurtleFollow::robotControl()
     //Need to add reversing if too close------------------------------------------------
 
     cmd_vel_pub_.publish(robot_.control_);
-    
   }
 }
