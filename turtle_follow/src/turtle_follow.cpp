@@ -10,7 +10,7 @@ TurtleFollow::TurtleFollow(ros::NodeHandle nh)
 {
   //need to initialise all the variable values-------------------------------------------------------------
   //Passing by reference (&TurtleFollow) might be a problem-------------------------------
-  odom_sub_ = nh_.subscribe("/odom", 10, &TurtleFollow::odomCallback, this);
+  odom_sub_ = nh_.subscribe("/odom", 10, &TurtleFollow::odomCallback, this); //Probs delete------
   laser_sub_ = nh_.subscribe("/scan", 10, &TurtleFollow::laserCallback, this);
   tag_sub_ = nh_.subscribe("/ar_pose_marker", 10, &TurtleFollow::tagCallback, this);
 
@@ -55,10 +55,13 @@ bool TurtleFollow::obstructionDetection()
     for (unsigned int i = 0; i < robot_.ranges_.size(); i++)
     {
       //The +-25 is the window of detection -- Can move this to the for loop above to make neater------------------------------------------------
-      if ((robot_.ranges_.at(i) < robot_.radius_ + 0.2) && (((i >= (robot_.ranges_.size() - 15)) && i <= robot_.ranges_.size()) || (i >= 0 && i <= 15)))
+      if (robot_.ranges_.at(i) < robot_.radius_ && robot_.ranges_.at(i) > 0)
       {
-        ROS_INFO_STREAM("Obstruction Ahead!");
-        robot_.obstacle_ = true;
+        if (((i >= (robot_.ranges_.size() - 15)) && i <= robot_.ranges_.size() - 1) || (i >= 0 && i <= 15))
+        {
+          ROS_INFO_STREAM("Obstruction Ahead!");
+          robot_.obstacle_ = true;
+        }
       }
     }
   }
@@ -67,64 +70,6 @@ bool TurtleFollow::obstructionDetection()
     robot_.obstacle_ = false;
   }
   return robot_.obstacle_;
-}
-
-//Delete if not used-------------------------------------------------------------------------------------------------
-void TurtleFollow::detection(void)
-{
-  //Convert image
-  //BGR2HSV
-  cv::Mat image_ = cv::imread("/home/ros/catkin_ws/src/maze_navigating_robot/imageTuning/image2.jpg"); //Remove and replace with topic/imagecallback
-  // cv::Mat image_ = &image; How do I access &image?-----------------------------------------------------------------------------
-  cv::Mat hsv; //Make class variable?/Only use one vartaiable to save time for all hsv redMask edges etc--------------------------
-  cv::cvtColor(image_, hsv, cv::COLOR_BGR2HSV);
-
-  //https://docs.opencv.org/3.4/da/d97/tutorial_threshold_inRange.html
-  //Threshold to isolate Red
-  cv::Mat redMask;
-  //Sim
-  // cv::inRange(hsv, cv::Scalar(0, 127, 50), cv::Scalar(6, 255, 255), redMask);
-  //Real Robot
-  cv::inRange(hsv, cv::Scalar(0, 127, 50), cv::Scalar(6, 255, 255), redMask);
-
-  //Draw box around red blob
-  cv::Mat edges;
-  cv::Canny(redMask, edges, 400, 1400, 3);
-
-  //Find contours: https://docs.opencv.org/master/d4/d73/tutorial_py_contours_begin.html
-  std::vector<std::vector<cv::Point>> contours;
-  cv::findContours(edges, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
-  //Draw contours
-  cv::drawContours(image_, contours, 0, cv::Scalar(0, 255, 0), 2);
-
-  //Get centre position of blob
-  //Get moments of contours
-  cv::Moments m = cv::moments(contours[0], true);
-  //centre of blob: https://www.pyimagesearch.com/2016/02/01/opencv-center-of-contour/
-  int cx = m.m10 / m.m00;
-  int cy = m.m01 / m.m00;
-  cv::Point pt(cx, cy);
-  cv::circle(image_, pt, 3, CV_RGB(0, 255, 0), 1);
-
-  double area = cv::contourArea(contours[0]);
-
-  cv::Size size = image_.size();
-  double frameArea = size.width * size.height;
-  std::cout << "Contour Area: " << area << std::endl;    //--------------------------------------------------------
-  std::cout << "Frame Area: " << frameArea << std::endl; //-----------------------------------------------------
-  //Do ratio comparison then initiate takeover?
-  double ratio = area / frameArea;
-  int cutoff = 0; //Adjust------------------------------
-  if (ratio > cutoff)
-  {
-    //Take over control till ratio is certain amount. - This might need to be in higher loop so that values can be recalculated or not
-
-    //Set linear and angular velocity override
-    geometry_msgs::Twist twist{};
-    twist.angular.z = 0.;
-    twist.linear.x = 0;
-    // cmd_vel_pub_.publish(twist); //Needs to be redefined?------------------------------
-  }
 }
 
 void TurtleFollow::basicController(double centreDistance)
@@ -181,6 +126,34 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
 
   robot_.control_.linear.x = linear_velocity_;
   robot_.control_.angular.z = angular_velocity_;
+
+  //PMS code
+  // double lookahead = 10;
+  // target_range_ = target_bogie.at(1);
+  // double gamma = (2 * (target_range_ + lookahead) * std::sin(target_bogie[0])) / std::pow(target_range_, 2);
+
+  // std::lock_guard<std::mutex> lock(access_);
+  // linear_velocity_ = std::sqrt((6 * std::pow(9.81, 2)) / std::abs(gamma));
+  // angular_velocity_ = linear_velocity_ * gamma;
+
+  // if (linear_velocity_ < sim->V_TERM)
+  // {
+  //     linear_velocity_ = sim->V_TERM;
+  // }
+  // else if (linear_velocity_ > sim->MAX_V)
+  // {
+  //     linear_velocity_ = sim->MAX_V;
+  // }
+
+  // double g_force = std::abs(linear_velocity_ * angular_velocity_ / 9.81);
+
+  // while (std::abs(g_force) > sim->MAX_G)
+  // {
+  //     angular_velocity_ *= 0.99;
+  //     linear_velocity_ *= 0.99;
+  //     g_force = linear_velocity_ * angular_velocity_ / 9.81;
+  // }
+  ///////////
 }
 
 void TurtleFollow::visServo(double centreDistance)
@@ -262,6 +235,7 @@ void TurtleFollow::visServo(double centreDistance)
 
 void TurtleFollow::robotControl()
 {
+  ros::Rate rate(10);
   while (ros::ok())
   {
     std::cout << "Robot Control" << std::endl;
@@ -274,18 +248,21 @@ void TurtleFollow::robotControl()
     else
     {
       std::cout << "Turning to find tag" << std::endl;
-      robot_.control_.linear.x = 0;
-      robot_.control_.angular.z = 0.1;
+      robot_.twist_.linear.x = 0;
+      robot_.twist_.angular.z = 0.1;
     }
 
     if (obstructionDetection())
     {
       std::cout << "Obstruction" << std::endl;
-      robot_.control_.linear.x = 0;
-      robot_.control_.angular.z = 0;
+      robot_.twist_.linear.x = 0;
+      robot_.twist_.angular.z = 0;
     }
     //Need to add reversing if too close------------------------------------------------
+    std::cout << "Linear: " << robot_.twist_.linear.x << std::endl;
+    std::cout << "Angular: " << robot_.twist_.angular.z << std::endl;
 
-    cmd_vel_pub_.publish(robot_.control_);
+    cmd_vel_pub_.publish(robot_.twist_);
+    rate.sleep();
   }
 }

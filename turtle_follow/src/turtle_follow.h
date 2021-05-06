@@ -56,9 +56,8 @@ private:
         const double radius_ = 0.22;
         const double max_vel_ = 0.22;
         bool obstacle_;
-        geometry_msgs::Twist control_;
+        geometry_msgs::Twist twist_{};
         std::vector<float> ranges_;
-        std::mutex mtx_; //Do we need to multithread?-------------------------------
     };
 
     Robot robot_;
