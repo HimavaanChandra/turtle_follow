@@ -265,7 +265,7 @@ void TurtleFollow::robotControl()
     {
       std::cout << "Turning to find tag" << std::endl;
       robot_.twist_.linear.x = 0;
-      robot_.twist_.angular.z = 0.1;
+      robot_.twist_.angular.z = 0.5;
     }
 
     if (obstructionDetection())
