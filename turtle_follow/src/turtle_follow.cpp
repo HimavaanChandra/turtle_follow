@@ -49,18 +49,23 @@ void TurtleFollow::odomCallback(const nav_msgs::OdometryConstPtr &msg)
 
 bool TurtleFollow::obstructionDetection()
 {
+  robot_.closest_range_ = 100; //Set high so can be overwritten
   robot_.obstacle_ = false;
   if (robot_.ranges_.size() > 0)
   {
     for (unsigned int i = 0; i < robot_.ranges_.size(); i++)
     {
-      //The +-25 is the window of detection -- Can move this to the for loop above to make neater------------------------------------------------
+      //The +-15 degrees is the window of detection for a forward obstruction
       if (robot_.ranges_.at(i) < robot_.radius_ && robot_.ranges_.at(i) > 0)
       {
         if (((i >= (robot_.ranges_.size() - 15)) && i <= robot_.ranges_.size() - 1) || (i >= 0 && i <= 15))
         {
           ROS_INFO_STREAM("Obstruction Ahead!");
           robot_.obstacle_ = true;
+          if (robot_.ranges_.at(i) < robot_.closest_range_)
+          {
+            robot_.closest_range_ = robot_.ranges_.at(i);
+          }
         }
       }
     }
@@ -108,11 +113,10 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
 {
   // Maximum translational velocity	Burger = 0.22 m/s	Waffle = 0.26 m/s
   // Maximum rotational velocity	Burger = 2.84 rad/s (162.72 deg/s)	Waffle = 1.82 rad/s (104.27 deg/s)
-  double rotv = 2.84;
   double gamma = (2 * std::sin(centreDistance)) / std::pow(range, 2);
   // double linear_velocity_ = std::sqrt((6 * std::pow(9.81, 2)) / std::abs(gamma));
   double linear_velocity_ = 0.22;
-  double angular_velocity_ = linear_velocity_ * gamma *10;
+  double angular_velocity_ = linear_velocity_ * gamma * 5;
   if (gamma < 0)
   {
     if (angular_velocity_ < 0)
@@ -127,13 +131,14 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
       angular_velocity_ = -angular_velocity_;
     }
   }
+  //Remove cout -----------------------------------------------------------------------------------------
   std::cout << "gamma: " << gamma << " linear: " << linear_velocity_ << " angular: " << angular_velocity_ << std::endl;
-  if (linear_velocity_ > robot_.max_vel_)
+  if (linear_velocity_ > robot_.max_linv_)
   {
-    linear_velocity_ = robot_.max_vel_;
+    linear_velocity_ = robot_.max_linv_;
   }
 
-  while (linear_velocity_ > robot_.max_vel_ || angular_velocity_ > rotv)
+  while (linear_velocity_ > robot_.max_linv_ || angular_velocity_ > robot_.max_rotv_)
   {
     angular_velocity_ *= 0.99;
     linear_velocity_ *= 0.99;
@@ -141,34 +146,6 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
 
   robot_.twist_.linear.x = linear_velocity_;
   robot_.twist_.angular.z = angular_velocity_;
-
-  //PMS code
-  // double lookahead = 10;
-  // target_range_ = target_bogie.at(1);
-  // double gamma = (2 * (target_range_ + lookahead) * std::sin(target_bogie[0])) / std::pow(target_range_, 2);
-
-  // std::lock_guard<std::mutex> lock(access_);
-  // linear_velocity_ = std::sqrt((6 * std::pow(9.81, 2)) / std::abs(gamma));
-  // angular_velocity_ = linear_velocity_ * gamma;
-
-  // if (linear_velocity_ < sim->V_TERM)
-  // {
-  //     linear_velocity_ = sim->V_TERM;
-  // }
-  // else if (linear_velocity_ > sim->MAX_V)
-  // {
-  //     linear_velocity_ = sim->MAX_V;
-  // }
-
-  // double g_force = std::abs(linear_velocity_ * angular_velocity_ / 9.81);
-
-  // while (std::abs(g_force) > sim->MAX_G)
-  // {
-  //     angular_velocity_ *= 0.99;
-  //     linear_velocity_ *= 0.99;
-  //     g_force = linear_velocity_ * angular_velocity_ / 9.81;
-  // }
-  ///////////
 }
 
 void TurtleFollow::visServo(double centreDistance)
@@ -273,6 +250,12 @@ void TurtleFollow::robotControl()
       std::cout << "Obstruction" << std::endl;
       robot_.twist_.linear.x = 0;
       robot_.twist_.angular.z = 0;
+      if (robot_.closest_range_ < robot_.radius_ - 0.1)
+      {
+        std::cout << "Reverse" << std::endl;
+        purePursuit(tag_pose_.position.x, tag_pose_.position.z);
+        robot_.twist_.linear.x = -robot_.twist_.linear.x/5;
+      }
     }
     //Need to add reversing if too close------------------------------------------------
     std::cout << "Linear: " << robot_.twist_.linear.x << std::endl;

@@ -54,7 +54,9 @@ private:
     struct Robot
     {
         const double radius_ = 0.22;
-        const double max_vel_ = 0.22;
+        const double max_linv_ = 0.22;
+        const double max_rotv_ = 2.84;
+        float closest_range_;
         bool obstacle_;
         geometry_msgs::Twist twist_{};
         std::vector<float> ranges_;
