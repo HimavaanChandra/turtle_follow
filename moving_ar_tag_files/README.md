@@ -13,7 +13,7 @@
 
    
    1.4)
-   Look for the folder "turtlebot3\_arleader" should be moved to /src/turtlebot3\_simulations/turtlebot3_gazebo/models
+   Look for the folder "turtlebot3\_arleader" should be moved to (catkin workspace)/src/turtlebot3\_simulations/turtlebot3_gazebo/models
 
    
 2. In the models folder --> turtlebot3_arleader, open model.sdf in a text editor then
