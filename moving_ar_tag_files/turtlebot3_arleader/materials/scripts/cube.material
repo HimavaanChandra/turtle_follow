@@ -1,0 +1,16 @@
+material cubemark/Diffuse
+{
+  recieve_shadows off
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+  
+        texture cubefaces.png
+        
+      }
+    }
+  }
+}

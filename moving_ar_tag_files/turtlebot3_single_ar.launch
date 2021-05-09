@@ -1,0 +1,28 @@
+<launch>
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+  <arg name="x_pos" default="0.0"/>
+  <arg name="y_pos" default="0.0"/>
+  <arg name="z_pos" default="0.0"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/empty.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <include file="$(find turtlebot3_gazebo)/launch/spawn_sdf.launch">
+     <arg name="robot_name" value="leader" />
+     <arg name="x" value="0.0" />
+     <arg name="y" value="0.0" />
+     <arg name="z" value="0.0" />
+     <arg name="roll" value="0"/>
+     <arg name="pitch" value="0"/>
+     <arg name="yaw" value="0.0" />
+     <arg name="sdf_robot_file" value="$(find turtlebot3_gazebo)/models/turtlebot3_arleader/model.sdf" />
+</include>
+
+
+</launch>
