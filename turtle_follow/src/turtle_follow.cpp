@@ -155,71 +155,83 @@ void TurtleFollow::visServo(double centreDistance)
   // double angular_velocity_ = 0;
   // double lambda = 0.01;
   // // 1.93
-  // cv::Mat focalLength = [1408.83; 1409.15];
-  // cv::Mat prinPoint = [980.52; 521.50];
+  // // cv::Mat<double> focalLength = [1408.83, 1409.15];
+  // std::vector<double> focalLength = [1408.83, 1409.15];
+  // // cv::Mat<double> prinPoint = [980.52, 521.50];
+  // std::vector<double> prinPoint = [980.52, 521.50];
 
   // // Find the centre of the AR tag
   // double x = tag_pose_.position.z;
   // double y = tag_pose_.position.x;
   // double z = tag_pose_.position.y;
   // double Z = 0.2;
-  // cv::Mat arPose = [x y z];
+  // // cv::Mat<double> arPose = (x, y, z);
+  // std::vector<double> arPose = [x, y, z];
   // double oriW = tag_pose_.orientation.w;
   // double oriX = tag_pose_.orientation.x;
   // double oriY = tag_pose_.orientation.y;
   // double oriZ = tag_pose_.orientation.z;
-  // tf::Quaternion q(oriX, oriY, OriZ, oriW);
+  // tf::Quaternion q(oriX, oriY, oriZ, oriW);
   // tf::Matrix3x3 m(q);
   // double roll, pitch, yaw;
   // m.getRPY(roll, pitch, yaw);
   // // When tag pose x = 0, AR tag is in centre of screen
   // // Tag pose x is y camera
   // // Tag pose z is x camera
-  // cv::Mat target = [x; y; Z; 1]; //Might need to change Z to lowercase z if followiing is not working ----------------------------------------
+  // // cv::Mat<double> target = (x, y, Z, 1); //Might need to change Z to lowercase z if followiing is not working ----------------------------------------
+  // std::vector<double> target = (x, y, z, 1);
 
   // // Transform ros ar to camera frame --------------------------------------------------------------------------------------------------------
 
   // // Find linear and angular velocity to navigate centre of AR tag to the centre of camera frame using visual servoing
-  // cv::Mat imTarget = (target - prinPoint) / focalLength;
-  // cv::Mat ar3D = (arPose - prinPoint) / focalLength;
+  // // cv::Mat<double> imTarget = (target - prinPoint) / focalLength;
+  // std::vector<double> imTarget = (target - prinPoint) / focalLength;
+  // // cv::Mat<double> ar3D = (arPose - prinPoint) / focalLength;
+  // std::vector<double> ar3D = (arPose - prinPoint) / focalLength;
 
   // // Calculate velocity matrix/feature Jacobian
-  // cv::Mat Lxi(2, 6); // Is this how you set the size of a matrix ?? I'm struggling to find an example that I understand --------------------
-  // std::vector<cv::Mat> Lx;
-  // double n = size(imTarget);
-  // for (int i = 0; i < n; i++)
+  // cv::Mat<double> Lxi(2, 6); // Is this how you set the size of a matrix ?? I'm struggling to find an example that I understand --------------------
+  // std::vector<double> Lxi;
+  // std::vector<std::vector<double>> Lx;
+  // int n = size(imTarget);
+  // for (int i = 0; i < n; i+1)
   // {
   //   // You are accessing positions that arent defined/set yet --------------------------------------------------------------------------------
   //   Lxi[1, 1] = -1 / Z;
   //   Lxi[1, 2] = 0;
   //   Lxi[1, 3] = x / Z;
   //   Lxi[1, 4] = x * y;
-  //   Lxi[1, 5] = -(1 + x ^ 2);
+  //   Lxi[1, 5] = -(1 + pow(x, 2));
   //   Lxi[1, 6] = y;
 
   //   Lxi[2, 1] = 0;
   //   Lxi[2, 2] = -1 / Z;
   //   Lxi[2, 3] = y / Z;
-  //   Lxi[2, 4] = 1 + y ^ 2;
+  //   Lxi[2, 4] = 1 + pow(y, 2);
   //   Lxi[2, 5] = -x * y;
   //   Lxi[2, 6] = -x;
 
-  //   Lx.pushback(Lxi);
+  //   Lx.push_back(Lxi);
   // }
 
   // // Calculate position error
-  // cv::Mat error2 = ar3D - imTarget;
-  // std::vector<double> error;
-  // error = cv::Mat::reshape(1, 6); // I'm not sure if this is right still tbh ??? -------------------------------------------------------------
-  // cv::Mat deltaError = -error * lambda;
+  // // cv::Mat<double> error2 = ar3D - imTarget;
+  // std::vector<double> error2 = ar3D - imTarget;
+  // // cv::Mat<double> err;
+  // std::vector<double> err;
+  // err = error2.resize(1, 6); // I'm not sure if this is right still tbh ??? -------------------------------------------------------------
+  // // cv::Mat<double> deltaError = -err * lambda;
+  // std::vector<double> deltaError = -err * lambda;
 
   // // Calculate velocity matrix
-  // cv::Mat Lx2;
-  // cv::Mat Lx2 = pow((Lx.t() * Lx), -1) * Lx.t();
-  // cv::Mat velocity;
-  // cv::Mat velocity = -lambda * Lx2 * error;
-  // double linear_velocity_ = velocity[1, 1];
-  // double angular_velocity_ = velocity[2, 1];
+  // // cv::Mat<double> Lx2;
+  // std::vector<double> Lx2;
+  // Lx2 = pow((Lx.t() * Lx), -1) * Lx.t();
+  // // cv::Mat<double> velocity;
+  // std::vector<double> velocity;
+  // velocity = -(lambda) * Lx2 * err;
+  // linear_velocity_ = velocity.at(1, 1);
+  // angular_velocity_ = velocity.at(2, 1);
 
   // // Published to ros in robotControl
   // robot_.twist_.linear.x = linear_velocity_;
