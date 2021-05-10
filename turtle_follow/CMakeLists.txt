@@ -13,8 +13,6 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   nav_msgs
   tf
-  cv_bridge
-  image_transport
 )
 
 ## System dependencies are found with CMake's conventions
@@ -37,8 +35,6 @@ catkin_package(
 LIBRARIES
 INCLUDE_DIRS
 CATKIN_DEPENDS
-cv_bridge
-image_transport
 AlvarMarkers
 roscpp
 sensor_msgs

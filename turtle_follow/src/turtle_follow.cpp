@@ -1,16 +1,10 @@
 #include "turtle_follow.h"
 
-//Check message types and addons in cmake and package.xml
-
-//Maybe make a file to auto download dependencies like the ar_tags package
-//Need to make a launch file for sim and real robots
-
 TurtleFollow::TurtleFollow(ros::NodeHandle nh)
     : nh_(nh)
 {
-  //need to initialise all the variable values-------------------------------------------------------------
-  //Passing by reference (&TurtleFollow) might be a problem-------------------------------
-  odom_sub_ = nh_.subscribe("/odom", 10, &TurtleFollow::odomCallback, this); //Probs delete------
+  // Subscribe to ros topics and set variables
+  odom_sub_ = nh_.subscribe("/odom", 10, &TurtleFollow::odomCallback, this);
   laser_sub_ = nh_.subscribe("/scan", 10, &TurtleFollow::laserCallback, this);
   tag_sub_ = nh_.subscribe("/ar_pose_marker", 10, &TurtleFollow::tagCallback, this);
 
@@ -25,15 +19,11 @@ TurtleFollow::~TurtleFollow()
 void TurtleFollow::tagCallback(const ar_track_alvar_msgs::AlvarMarkersConstPtr &msg)
 {
   tag_ = false;
-  // const struct ar_track_alvar_msgs::AlvarMarkers_<std::allocator<void> >
-  // ar_track_alvar_msgs::AlvarMarker[] markers = msg->markers;
-  // std::vector<ar_track_alvar_msgs::AlvarMarker> test = msg->markers;
   if (msg->markers.size() > 0)
   {
     tag_pose_ = msg->markers.at(0).pose.pose;
     tag_ = true;
   }
-  // tag_pose_ = msg->pose.pose;
 }
 
 void TurtleFollow::laserCallback(const sensor_msgs::LaserScanConstPtr &msg)
@@ -41,7 +31,6 @@ void TurtleFollow::laserCallback(const sensor_msgs::LaserScanConstPtr &msg)
   robot_.ranges_ = msg->ranges;
 }
 
-//May not need------------------------------------------------------------------------
 void TurtleFollow::odomCallback(const nav_msgs::OdometryConstPtr &msg)
 {
   geometry_msgs::Pose pose = msg->pose.pose;
@@ -49,13 +38,14 @@ void TurtleFollow::odomCallback(const nav_msgs::OdometryConstPtr &msg)
 
 bool TurtleFollow::obstructionDetection()
 {
-  robot_.closest_range_ = 100; //Set high so can be overwritten
+  // Closest range is set to a high value so it can be over written later on
+  robot_.closest_range_ = 100;
   robot_.obstacle_ = false;
   if (robot_.ranges_.size() > 0)
   {
     for (unsigned int i = 0; i < robot_.ranges_.size(); i++)
     {
-      //The +-15 degrees is the window of detection for a forward obstruction
+      // The +-15 degrees is the window of detection for a forward obstruction
       if (robot_.ranges_.at(i) < robot_.radius_ && robot_.ranges_.at(i) > 0)
       {
         if (((i >= (robot_.ranges_.size() - 15)) && i <= robot_.ranges_.size() - 1) || (i >= 0 && i <= 15))
@@ -79,29 +69,28 @@ bool TurtleFollow::obstructionDetection()
 
 void TurtleFollow::basicController(double centreDistance)
 {
-  // Maximum translational velocity	Burger = 0.22 m/s	Waffle = 0.26 m/s
-  // Maximum rotational velocity	Burger = 2.84 rad/s (162.72 deg/s)	Waffle = 1.82 rad/s (104.27 deg/s)
+  // Maximum translational velocity	Waffle = 0.26 m/s
+  // Maximum rotational velocity Waffle = 1.82 rad/s (104.27 deg/s)
 
-  //Adjust tolerances
-  //Within tolerance
+  // AR tag is within 0.1 tolerance of view
   if (centreDistance >= -0.1 && centreDistance <= 0.1)
   {
     robot_.twist_.linear.x = 0.10;
     robot_.twist_.angular.z = 0;
   }
-  //To the left
+  // To the left ------------------------------------------------------------------------------------Is this move to the left or AR tag is to the left???? -----
   else if (centreDistance < -0.1)
   {
     robot_.twist_.linear.x = 0.11;
     robot_.twist_.angular.z = 0.5;
   }
-  //To the right
+  // To the right
   else if (centreDistance > 0.1)
   {
     robot_.twist_.linear.x = 0.11;
     robot_.twist_.angular.z = -0.5;
   }
-  //Do nothing
+  // If there is no relevant input, do nothing
   else
   {
     robot_.twist_.linear.x = 0;
@@ -111,10 +100,9 @@ void TurtleFollow::basicController(double centreDistance)
 
 void TurtleFollow::purePursuit(double centreDistance, double range)
 {
-  // Maximum translational velocity	Burger = 0.22 m/s	Waffle = 0.26 m/s
-  // Maximum rotational velocity	Burger = 2.84 rad/s (162.72 deg/s)	Waffle = 1.82 rad/s (104.27 deg/s)
+  // Maximum translational velocity	Waffle = 0.26 m/s
+  // Maximum rotational velocity Waffle = 1.82 rad/s (104.27 deg/s)
   double gamma = (2 * std::sin(centreDistance)) / std::pow(range, 2);
-  // double linear_velocity_ = std::sqrt((6 * std::pow(9.81, 2)) / std::abs(gamma));
   double linear_velocity_ = 0.22;
   double angular_velocity_ = linear_velocity_ * gamma * 5;
   if (gamma < 0)
@@ -131,8 +119,7 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
       angular_velocity_ = -angular_velocity_;
     }
   }
-  //Remove cout -----------------------------------------------------------------------------------------
-  std::cout << "gamma: " << gamma << " linear: " << linear_velocity_ << " angular: " << angular_velocity_ << std::endl;
+
   if (linear_velocity_ > robot_.max_linv_)
   {
     linear_velocity_ = robot_.max_linv_;
@@ -148,8 +135,8 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
   robot_.twist_.angular.z = angular_velocity_;
 }
 
-void TurtleFollow::visServo(double centreDistance)
-{
+//void TurtleFollow::visServo(double centreDistance)
+//{
   // // Visual Servoing
   // double linear_velocity_ = 0;
   // double angular_velocity_ = 0;
@@ -178,10 +165,10 @@ void TurtleFollow::visServo(double centreDistance)
   // // When tag pose x = 0, AR tag is in centre of screen
   // // Tag pose x is y camera
   // // Tag pose z is x camera
-  // // cv::Mat<double> target = (x, y, Z, 1); //Might need to change Z to lowercase z if followiing is not working ----------------------------------------
+  // // cv::Mat<double> target = (x, y, Z, 1); //Might need to change Z to lowercase z if followiing is not working ---------------------------------------------
   // std::vector<double> target = (x, y, z, 1);
 
-  // // Transform ros ar to camera frame --------------------------------------------------------------------------------------------------------
+  // // Transform ros ar to camera frame -------------------------------------------------------------------------------------------------------------------------
 
   // // Find linear and angular velocity to navigate centre of AR tag to the centre of camera frame using visual servoing
   // // cv::Mat<double> imTarget = (target - prinPoint) / focalLength;
@@ -190,13 +177,12 @@ void TurtleFollow::visServo(double centreDistance)
   // std::vector<double> ar3D = (arPose - prinPoint) / focalLength;
 
   // // Calculate velocity matrix/feature Jacobian
-  // cv::Mat<double> Lxi(2, 6); // Is this how you set the size of a matrix ?? I'm struggling to find an example that I understand --------------------
+  // cv::Mat<double> Lxi(2, 6); 
   // std::vector<double> Lxi;
   // std::vector<std::vector<double>> Lx;
   // int n = size(imTarget);
   // for (int i = 0; i < n; i+1)
   // {
-  //   // You are accessing positions that arent defined/set yet --------------------------------------------------------------------------------
   //   Lxi[1, 1] = -1 / Z;
   //   Lxi[1, 2] = 0;
   //   Lxi[1, 3] = x / Z;
@@ -219,7 +205,7 @@ void TurtleFollow::visServo(double centreDistance)
   // std::vector<double> error2 = ar3D - imTarget;
   // // cv::Mat<double> err;
   // std::vector<double> err;
-  // err = error2.resize(1, 6); // I'm not sure if this is right still tbh ??? -------------------------------------------------------------
+  // err = error2.resize(1, 6);
   // // cv::Mat<double> deltaError = -err * lambda;
   // std::vector<double> deltaError = -err * lambda;
 
@@ -236,7 +222,7 @@ void TurtleFollow::visServo(double centreDistance)
   // // Published to ros in robotControl
   // robot_.twist_.linear.x = linear_velocity_;
   // robot_.twist_.angular.z = angular_velocity_;
-}
+//}
 
 void TurtleFollow::robotControl()
 {
@@ -247,8 +233,7 @@ void TurtleFollow::robotControl()
     if (tag_)
     {
       std::cout << "Tag Detected" << std::endl;
-      // basicController(tag_pose_.position.x);
-      purePursuit(tag_pose_.position.x, tag_pose_.position.z); //-------------------------------------------
+      purePursuit(tag_pose_.position.x, tag_pose_.position.z);
     }
     else
     {
@@ -269,7 +254,6 @@ void TurtleFollow::robotControl()
         robot_.twist_.linear.x = -robot_.twist_.linear.x/5;
       }
     }
-    //Need to add reversing if too close------------------------------------------------
     std::cout << "Linear: " << robot_.twist_.linear.x << std::endl;
     std::cout << "Angular: " << robot_.twist_.angular.z << std::endl;
 
