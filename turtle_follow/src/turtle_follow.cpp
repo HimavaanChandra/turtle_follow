@@ -100,39 +100,39 @@ void TurtleFollow::basicController(double centreDistance)
 
 void TurtleFollow::purePursuit(double centreDistance, double range)
 {
-  // Maximum translational velocity	Waffle = 0.26 m/s
-  // Maximum rotational velocity Waffle = 1.82 rad/s (104.27 deg/s)
+  // Maximum translational velocity	Waffle = 0.26 m/s ----------------------------------------defined in .h -------------------------------
+  // Maximum rotational velocity Waffle = 1.82 rad/s (104.27 deg/s) --------------------------defined in .h ----------------------------------------
   double gamma = (2 * std::sin(centreDistance)) / std::pow(range, 2);
-  double linear_velocity_ = 0.22;
-  double angular_velocity_ = linear_velocity_ * gamma * 5;
+  double linear_velocity = 0.22;
+  double angular_velocity = linear_velocity * gamma * 5;
   if (gamma < 0)
   {
-    if (angular_velocity_ < 0)
+    if (angular_velocity < 0)
     {
-      angular_velocity_ = -angular_velocity_;
+      angular_velocity = -angular_velocity;
     }
   }
   else
   {
-    if (angular_velocity_ > 0)
+    if (angular_velocity > 0)
     {
-      angular_velocity_ = -angular_velocity_;
+      angular_velocity = -angular_velocity;
     }
   }
 
-  if (linear_velocity_ > robot_.max_linv_)
+  if (linear_velocity > robot_.max_linv_)
   {
-    linear_velocity_ = robot_.max_linv_;
+    linear_velocity = robot_.max_linv_;
   }
 
-  while (linear_velocity_ > robot_.max_linv_ || angular_velocity_ > robot_.max_rotv_)
+  while (linear_velocity > robot_.max_linv_ || angular_velocity > robot_.max_rotv_)
   {
-    angular_velocity_ *= 0.99;
-    linear_velocity_ *= 0.99;
+    angular_velocity *= 0.99;
+    linear_velocity *= 0.99;
   }
 
-  robot_.twist_.linear.x = linear_velocity_;
-  robot_.twist_.angular.z = angular_velocity_;
+  robot_.twist_.linear.x = linear_velocity;
+  robot_.twist_.angular.z = angular_velocity;
 }
 
 //void TurtleFollow::visServo(double centreDistance)
