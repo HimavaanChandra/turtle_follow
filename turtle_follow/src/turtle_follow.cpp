@@ -78,13 +78,13 @@ void TurtleFollow::basicController(double centreDistance)
     robot_.twist_.linear.x = 0.10;
     robot_.twist_.angular.z = 0;
   }
-  // To the left ------------------------------------------------------------------------------------Is this move to the left or AR tag is to the left???? -----
+  // Tag to the right, turn right 
   else if (centreDistance < -0.1)
   {
     robot_.twist_.linear.x = 0.11;
     robot_.twist_.angular.z = 0.5;
   }
-  // To the right
+  // Tag to the left, turn left
   else if (centreDistance > 0.1)
   {
     robot_.twist_.linear.x = 0.11;
