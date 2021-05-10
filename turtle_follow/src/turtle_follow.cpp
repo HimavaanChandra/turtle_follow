@@ -69,9 +69,6 @@ bool TurtleFollow::obstructionDetection()
 
 void TurtleFollow::basicController(double centreDistance)
 {
-  // Maximum translational velocity	Waffle = 0.26 m/s
-  // Maximum rotational velocity Waffle = 1.82 rad/s (104.27 deg/s)
-
   // AR tag is within 0.1 tolerance of view
   if (centreDistance >= -0.1 && centreDistance <= 0.1)
   {
@@ -100,8 +97,7 @@ void TurtleFollow::basicController(double centreDistance)
 
 void TurtleFollow::purePursuit(double centreDistance, double range)
 {
-  // Maximum translational velocity	Waffle = 0.26 m/s ----------------------------------------defined in .h -------------------------------
-  // Maximum rotational velocity Waffle = 1.82 rad/s (104.27 deg/s) --------------------------defined in .h ----------------------------------------
+  // Calculating maximum angular velocity for velocity control
   double gamma = (2 * std::sin(centreDistance)) / std::pow(range, 2);
   double linear_velocity = 0.22;
   double angular_velocity = linear_velocity * gamma * 5;
