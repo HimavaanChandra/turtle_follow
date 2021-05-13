@@ -104,7 +104,12 @@ private:
      */
     void purePursuit(double centreDistance, double range);
 
-    //void visServo(double centreDistance); ----------------------------------------------------------------------------------------------------------------------
+    /**
+     * @brief Control based on image based visual servoing to navigate towards the AR tag when detected
+     * 
+     * @param centreDistance 
+     */
+    void visServo(double centreDistance);
 
     ros::Subscriber odom_sub_;     //!< ROS subscriber variable for Odometry messages
     ros::Subscriber laser_sub_;    //!< ROS subscriber variable for Laser Scans
