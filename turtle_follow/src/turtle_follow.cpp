@@ -31,11 +31,6 @@ void TurtleFollow::laserCallback(const sensor_msgs::LaserScanConstPtr &msg)
   robot_.ranges_ = msg->ranges;
 }
 
-void TurtleFollow::odomCallback(const nav_msgs::OdometryConstPtr &msg)
-{
-  geometry_msgs::Pose pose = msg->pose.pose;
-}
-
 bool TurtleFollow::obstructionDetection()
 {
   // Closest range is set to a high value so it can be over written later on

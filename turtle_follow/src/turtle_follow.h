@@ -69,13 +69,6 @@ private:
     void laserCallback(const sensor_msgs::LaserScanConstPtr &msg);
 
     /**
-     * @brief Callback function for robot odometry data
-     * 
-     * @param msg 
-     */
-    void odomCallback(const nav_msgs::OdometryConstPtr &msg);
-
-    /**
      * @brief Function to check for obstruction for the safety of the robot
      * 
      * @return true 
