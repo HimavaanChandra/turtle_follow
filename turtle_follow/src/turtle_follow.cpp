@@ -69,13 +69,13 @@ void TurtleFollow::basicController(double centreDistance)
     robot_.twist_.linear.x = 0.10;
     robot_.twist_.angular.z = 0;
   } 
-  // Tag to the right, turn right 
+  // Tag to the left 
   else if (centreDistance < -0.1)
   {
     robot_.twist_.linear.x = 0.11;
     robot_.twist_.angular.z = 0.5;
   }
-  // Tag to the left, turn left
+  // Tag to the right
   else if (centreDistance > 0.1)
   {
     robot_.twist_.linear.x = 0.11;
