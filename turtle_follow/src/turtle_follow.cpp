@@ -4,7 +4,6 @@ TurtleFollow::TurtleFollow(ros::NodeHandle nh)
     : nh_(nh)
 {
   // Subscribe to ros topics and set variables
-  odom_sub_ = nh_.subscribe("/odom", 10, &TurtleFollow::odomCallback, this);
   laser_sub_ = nh_.subscribe("/scan", 10, &TurtleFollow::laserCallback, this);
   tag_sub_ = nh_.subscribe("/ar_pose_marker", 10, &TurtleFollow::tagCallback, this);
 
