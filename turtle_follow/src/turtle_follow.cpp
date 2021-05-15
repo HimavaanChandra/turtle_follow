@@ -138,8 +138,8 @@ void TurtleFollow::visServo(double centreDistance)
       // lin_vel = max_lin_vel 
 
   // Published to ros in robotControl
-  robot_.twist_.linear.x = linear_velocity_;
-  robot_.twist_.angular.z = angular_velocity_;
+  // robot_.twist_.linear.x = linear_velocity;
+  // robot_.twist_.angular.z = angular_velocity;
 }
 
 void TurtleFollow::robotControl()

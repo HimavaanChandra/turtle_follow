@@ -9,6 +9,7 @@
 
 #include "ar_track_alvar_msgs/AlvarMarkers.h"
 #include "geometry_msgs/Pose2D.h"
+#include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
 #include "tf/transform_datatypes.h"
 
