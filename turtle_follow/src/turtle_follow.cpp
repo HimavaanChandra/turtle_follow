@@ -133,11 +133,19 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
 
 void TurtleFollow::visServo(double centreDistance)
 {
-  // Get AR and Robot pose in 3D cords
   // Set tracking distance
   // Set heading angle tolerance
-  // Calculate tracking pose    
+  
+  
+  // Get AR and Robot pose in 3D cords
+
+
+  // Calculate tracking pose
+
+
   // Find angle to point to tracking point
+
+
     // if abs(ang) > ang_tot
       // Turn
     // else
