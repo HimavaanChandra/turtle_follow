@@ -4,7 +4,6 @@ TurtleFollow::TurtleFollow(ros::NodeHandle nh)
     : nh_(nh)
 {
   // Subscribe to ros topics and set variables
-  odom_sub_ = nh_.subscribe("/odom", 10, &TurtleFollow::odomCallback, this);
   laser_sub_ = nh_.subscribe("/scan", 10, &TurtleFollow::laserCallback, this);
   tag_sub_ = nh_.subscribe("/ar_pose_marker", 10, &TurtleFollow::tagCallback, this);
 
@@ -29,11 +28,6 @@ void TurtleFollow::tagCallback(const ar_track_alvar_msgs::AlvarMarkersConstPtr &
 void TurtleFollow::laserCallback(const sensor_msgs::LaserScanConstPtr &msg)
 {
   robot_.ranges_ = msg->ranges;
-}
-
-void TurtleFollow::odomCallback(const nav_msgs::OdometryConstPtr &msg)
-{
-  geometry_msgs::Pose pose = msg->pose.pose;
 }
 
 bool TurtleFollow::obstructionDetection()
@@ -75,13 +69,13 @@ void TurtleFollow::basicController(double centreDistance)
     robot_.twist_.linear.x = 0.10;
     robot_.twist_.angular.z = 0;
   } 
-  // Tag to the right, turn right 
+  // Tag to the left 
   else if (centreDistance < -0.1)
   {
     robot_.twist_.linear.x = 0.11;
     robot_.twist_.angular.z = 0.5;
   }
-  // Tag to the left, turn left
+  // Tag to the right
   else if (centreDistance > 0.1)
   {
     robot_.twist_.linear.x = 0.11;
@@ -152,8 +146,8 @@ void TurtleFollow::visServo(double centreDistance)
       // lin_vel = max_lin_vel 
 
   // Published to ros in robotControl
-  robot_.twist_.linear.x = linear_velocity_;
-  robot_.twist_.angular.z = angular_velocity_;
+  // robot_.twist_.linear.x = linear_velocity;
+  // robot_.twist_.angular.z = angular_velocity;
 }
 
 void TurtleFollow::robotControl()
