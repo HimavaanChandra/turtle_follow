@@ -12,7 +12,6 @@
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
 #include "tf/transform_datatypes.h"
-#include "nav_msgs/Odometry.h"
 
 #include <iostream>
 #include <string>
@@ -27,7 +26,7 @@
  * @class TurtleFollow
  * @brief Detects and follows an AR tag
  * @details TurtleFollow uses velocity control to navigate towards an AR tag.
- * TurtleFollow subscribes to a series of ROS topics that return AR tag data, laser scans and robot odometry data.
+ * TurtleFollow subscribes to a series of ROS topics that return AR tag data and laser scans.
  * TurtleFollow uses a combination of Pure Pusuit and a basic position controller to do so.
  */
 class TurtleFollow
@@ -70,12 +69,6 @@ private:
     void laserCallback(const sensor_msgs::LaserScanConstPtr &msg);
 
     /**
-     * @brief Callback function for Robot odometry     * 
-     * @param msg 
-     */
-    void odomCallback(const nav_msgs::OdometryConstPtr &msg);
-
-    /**
      * @brief Function to check for obstruction for the safety of the robot
      * 
      * @return true 
@@ -107,11 +100,9 @@ private:
     /**
      * @brief Control based on image based visual servoing to navigate towards the AR tag when detected
      * 
-     * @param 
      */
     void visServo(void);
 
-    ros::Subscriber odom_sub_;     //!< ROS subscriber variable for Odometry messages
     ros::Subscriber laser_sub_;    //!< ROS subscriber variable for Laser Scans
     ros::Subscriber tag_sub_;      //!< ROS subscriber variable for AR Tag data
     ros::Publisher cmd_vel_pub_;   //!< ROS publisher variable for Velocity commands
@@ -127,7 +118,6 @@ private:
         float closest_range_;          //!< Float for quantity of closest range variable
         bool obstacle_;                //!< Bool for whether there is an obstacle ahead or not
         geometry_msgs::Twist twist_{}; //!< Geometry messages twist variable
-        geometry_msgs::Pose pose_;     //!< Pose variable for Robot Pose
         std::vector<float> ranges_;    //!< Vector of floats to hold all ranges recorded
     };
 
