@@ -139,9 +139,6 @@ void TurtleFollow::visServo()
   double linear_velocity = 0.0;
   double angular_velocity = 0.0;
 
-  // AR Pose = tag_pose_.position...
-  // Robot pose = robot_.pose_.position...
-
   // Find angle to point to AR tag
   double tagX = tag_pose_.position.x;
   double tagZ = tag_pose_.position.z;
@@ -157,13 +154,13 @@ void TurtleFollow::visServo()
     // To the right
     if (headingDiff > 0)
     {
-      angular_velocity = (robot_.max_rotv_ / 50);
+      angular_velocity = -(robot_.max_rotv_ / 50);
       linear_velocity = robot_.max_linv_ / 25;
     }
     // To the left
     else if (headingDiff < 0)
     {
-      angular_velocity = -(robot_.max_rotv_ / 50);
+      angular_velocity = (robot_.max_rotv_ / 50);
       linear_velocity = robot_.max_linv_ / 25;
     }
   }
