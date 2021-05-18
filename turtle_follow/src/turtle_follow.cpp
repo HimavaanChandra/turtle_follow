@@ -184,8 +184,8 @@ void TurtleFollow::robotControl()
     if (tag_)
     {
       std::cout << "Tag Detected" << std::endl;
-      // purePursuit(tag_pose_.position.x, tag_pose_.position.z);
-      visServo();
+      purePursuit(tag_pose_.position.x, tag_pose_.position.z);
+      // visServo();
     }
     else
     {
