@@ -73,7 +73,7 @@ private:
      * @brief Callback function for Robot odometry     * 
      * @param msg 
      */
-    void TurtleFollow::odomCallback(const nav_msgs::OdometryConstPtr &msg)
+    void odomCallback(const nav_msgs::OdometryConstPtr &msg);
 
         /**
      * @brief Function to check for obstruction for the safety of the robot
@@ -109,7 +109,7 @@ private:
      * 
      * @param 
      */
-    void visServo(geometry_msgs::Pose tag_pose_);
+    void visServo(geometry_msgs::Pose tag_pose_, geometry_msgs::Pose pose_);
 
     ros::Subscriber odom_sub_;     //!< ROS subscriber variable for Odometry messages
     ros::Subscriber laser_sub_;     //!< ROS subscriber variable for Laser Scans

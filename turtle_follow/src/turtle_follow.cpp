@@ -131,31 +131,29 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
   robot_.twist_.angular.z = angular_velocity;
 }
 
-void TurtleFollow::visServo(geometry_msgs::Pose tag_pose_, )
+void TurtleFollow::visServo(geometry_msgs::Pose tag_pose_, geometry_msgs::Pose pose_)
 {
-  // // Set tracking distance
-  // double trackDist = 0.5;
-  // // Set heading angle tolerance
-  // double angTol = 5.0;
-  // double currentAng = 0.0;
+  // Set heading angle tolerance
+  double angTol = 5.0;
+  double currentAng = 0.0;
+  double linear_velocity = robot_.max_linv_;
+  double angular_velocity = robot_.max_rotv_;
 
-  // // AR Pose = tag_pose_
-  // // Robot pose = pose_
+  // AR Pose = tag_pose_
+  // Robot pose = pose_
 
-  // // Calculate tracking pose
-  //   //  zARPose + trackDist = trackingPose; 
+  // Find angle to point to AR tag
 
-  // // Find angle to point to tracking point
 
-  // // Adjust angular and linear velocity accordingly
-  //   // if abs(ang) > ang_tot
-  //     // Turn and move forward a little
-  //   // else
-  //     // lin_vel = max_lin_vel 
+  // Adjust angular and linear velocity accordingly
+    // if abs(ang) > ang_tot
+      // Turn and move forward a little
+    // else
+      // lin_vel = max_lin_vel 
 
-  // // Published to ros in robotControl
-  // robot_.twist_.linear.x = linear_velocity;
-  // robot_.twist_.angular.z = angular_velocity;
+  // Published to ros in robotControl
+  robot_.twist_.linear.x = linear_velocity;
+  robot_.twist_.angular.z = angular_velocity;
 }
 
 void TurtleFollow::robotControl()
