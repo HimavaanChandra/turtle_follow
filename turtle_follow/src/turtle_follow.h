@@ -75,13 +75,13 @@ private:
      */
     void odomCallback(const nav_msgs::OdometryConstPtr &msg);
 
-        /**
+    /**
      * @brief Function to check for obstruction for the safety of the robot
      * 
      * @return true 
      * @return false 
      */
-        bool obstructionDetection();
+    bool obstructionDetection();
 
     /**
      * @brief Function to detect AR tag
@@ -112,12 +112,11 @@ private:
     void visServo(geometry_msgs::Pose tag_pose_, geometry_msgs::Pose pose_);
 
     ros::Subscriber odom_sub_;     //!< ROS subscriber variable for Odometry messages
-    ros::Subscriber laser_sub_;     //!< ROS subscriber variable for Laser Scans
-    ros::Subscriber tag_sub_;       //!< ROS subscriber variable for AR Tag data
-    ros::Publisher cmd_vel_pub_;    //!< ROS publisher variable for Velocity commands
-    geometry_msgs::Pose tag_pose_;  //!< Pose variable for AR tag
-    geometry_msgs::Pose pose_;        //!< Pose variable for Robot Pose
-    bool tag_;                      //!< Bool for tag detection
+    ros::Subscriber laser_sub_;    //!< ROS subscriber variable for Laser Scans
+    ros::Subscriber tag_sub_;      //!< ROS subscriber variable for AR Tag data
+    ros::Publisher cmd_vel_pub_;   //!< ROS publisher variable for Velocity commands
+    geometry_msgs::Pose tag_pose_; //!< Pose variable for AR tag
+    bool tag_;                     //!< Bool for tag detection
 
     //!< Struct to capture all Turtlebot3 Waffle data
     struct Robot
@@ -128,6 +127,7 @@ private:
         float closest_range_;          //!< Float for quantity of closest range variable
         bool obstacle_;                //!< Bool for whether there is an obstacle ahead or not
         geometry_msgs::Twist twist_{}; //!< Geometry messages twist variable
+        geometry_msgs::Pose pose_;     //!< Pose variable for Robot Pose
         std::vector<float> ranges_;    //!< Vector of floats to hold all ranges recorded
     };
 

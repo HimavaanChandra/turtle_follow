@@ -74,8 +74,8 @@ void TurtleFollow::basicController(double centreDistance)
   {
     robot_.twist_.linear.x = 0.10;
     robot_.twist_.angular.z = 0;
-  } 
-  // Tag to the left 
+  }
+  // Tag to the left
   else if (centreDistance < -0.1)
   {
     robot_.twist_.linear.x = 0.11;
@@ -139,21 +139,42 @@ void TurtleFollow::visServo(geometry_msgs::Pose tag_pose_, geometry_msgs::Pose p
   double linear_velocity = robot_.max_linv_;
   double angular_velocity = robot_.max_rotv_;
 
-  // AR Pose = tag_pose_
-  // Robot pose = pose_
+  // AR Pose = tag_pose_.position...
+  // Robot pose = robot_.pose_.position...
 
   // Find angle to point to AR tag
-
+  double tagX = tag_pose_.position.x;
+  double tagZ = tag_pose_.position.z;
+  double absDist = 0.0;
+  absDist = sqrt(pow(tagX, 2) + pow(tagZ, 2));
+  double headingDiff = std::asin(tagX / absDist);
 
   // Adjust angular and linear velocity accordingly
-    // if abs(ang) > ang_tot
-      // Turn and move forward a little
-    // else
-      // lin_vel = max_lin_vel 
+  if (abs(headingDiff) > angTol)
+  { 
+    // Turn and move forward a little
+    // To the right
+    if (headingDiff > 0)
+    {
+      angular_velocity = -(robot_.max_rotv_ / 5);
+      linear_velocity = robot_.max_linv_ / 4;
+    }
+    // To the left
+    else
+    {
+      angular_velocity = robot_.max_rotv_ / 5;
+      linear_velocity = robot_.max_linv_ / 4;
+    }
+  }
+  else
+  {
+    // Full speed ahead
+    linear_velocity = robot_.max_linv_;
+  }
 
-  // Published to ros in robotControl
-  robot_.twist_.linear.x = linear_velocity;
-  robot_.twist_.angular.z = angular_velocity;
+// Published to ros in robotControl
+robot_.twist_.linear.x = linear_velocity;
+robot_.twist_.angular.z = angular_velocity;
 }
 
 void TurtleFollow::robotControl()
@@ -183,7 +204,7 @@ void TurtleFollow::robotControl()
       {
         std::cout << "Reverse" << std::endl;
         purePursuit(tag_pose_.position.x, tag_pose_.position.z);
-        robot_.twist_.linear.x = -robot_.twist_.linear.x/5;
+        robot_.twist_.linear.x = -robot_.twist_.linear.x / 5;
       }
     }
     std::cout << "Linear: " << robot_.twist_.linear.x << std::endl;
