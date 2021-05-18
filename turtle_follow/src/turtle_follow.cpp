@@ -6,6 +6,7 @@ TurtleFollow::TurtleFollow(ros::NodeHandle nh)
   // Subscribe to ros topics and set variables
   laser_sub_ = nh_.subscribe("/scan", 10, &TurtleFollow::laserCallback, this);
   tag_sub_ = nh_.subscribe("/ar_pose_marker", 10, &TurtleFollow::tagCallback, this);
+  odom_sub_ = nh_.subscribe("/odom", 10, &TurtleFollow::odomCallback, this);
 
   cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
   tag_ = false;

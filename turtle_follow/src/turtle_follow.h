@@ -12,6 +12,7 @@
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
 #include "tf/transform_datatypes.h"
+#include "nav_msgs/Odometry.h"
 
 #include <iostream>
 #include <string>
@@ -26,7 +27,7 @@
  * @class TurtleFollow
  * @brief Detects and follows an AR tag
  * @details TurtleFollow uses velocity control to navigate towards an AR tag.
- * TurtleFollow subscribes to a series of ROS topics that return AR tag data and laser scans.
+ * TurtleFollow subscribes to a series of ROS topics that return AR tag data, laser scans and robot odometry data.
  * TurtleFollow uses a combination of Pure Pusuit and a basic position controller to do so.
  */
 class TurtleFollow
@@ -110,6 +111,7 @@ private:
      */
     void visServo(geometry_msgs::Pose tag_pose_);
 
+    ros::Subscriber odom_sub_;     //!< ROS subscriber variable for Odometry messages
     ros::Subscriber laser_sub_;     //!< ROS subscriber variable for Laser Scans
     ros::Subscriber tag_sub_;       //!< ROS subscriber variable for AR Tag data
     ros::Publisher cmd_vel_pub_;    //!< ROS publisher variable for Velocity commands
