@@ -33,7 +33,7 @@ void TurtleFollow::laserCallback(const sensor_msgs::LaserScanConstPtr &msg)
 
 void TurtleFollow::odomCallback(const nav_msgs::OdometryConstPtr &msg)
 {
-  geometry_msgs::Pose pose_ = msg->pose.pose;
+  robot_.pose_ = msg->pose.pose;
 }
 
 bool TurtleFollow::obstructionDetection()
@@ -131,13 +131,13 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
   robot_.twist_.angular.z = angular_velocity;
 }
 
-void TurtleFollow::visServo(geometry_msgs::Pose tag_pose_, geometry_msgs::Pose pose_)
+void TurtleFollow::visServo()
 {
   // Set heading angle tolerance
-  double angTol = 5.0;
+  double angTol = 10.0;
   double currentAng = 0.0;
-  double linear_velocity = robot_.max_linv_;
-  double angular_velocity = robot_.max_rotv_;
+  double linear_velocity = 0.0;
+  double angular_velocity = 0.0;
 
   // AR Pose = tag_pose_.position...
   // Robot pose = robot_.pose_.position...
@@ -148,22 +148,23 @@ void TurtleFollow::visServo(geometry_msgs::Pose tag_pose_, geometry_msgs::Pose p
   double absDist = 0.0;
   absDist = sqrt(pow(tagX, 2) + pow(tagZ, 2));
   double headingDiff = std::asin(tagX / absDist);
+  headingDiff = headingDiff * 180 / M_PI;
 
   // Adjust angular and linear velocity accordingly
   if (abs(headingDiff) > angTol)
-  { 
+  {
     // Turn and move forward a little
     // To the right
     if (headingDiff > 0)
     {
-      angular_velocity = -(robot_.max_rotv_ / 5);
-      linear_velocity = robot_.max_linv_ / 4;
+      angular_velocity = (robot_.max_rotv_ / 50);
+      linear_velocity = robot_.max_linv_ / 25;
     }
     // To the left
-    else
+    else if (headingDiff < 0)
     {
-      angular_velocity = robot_.max_rotv_ / 5;
-      linear_velocity = robot_.max_linv_ / 4;
+      angular_velocity = -(robot_.max_rotv_ / 50);
+      linear_velocity = robot_.max_linv_ / 25;
     }
   }
   else
@@ -172,9 +173,9 @@ void TurtleFollow::visServo(geometry_msgs::Pose tag_pose_, geometry_msgs::Pose p
     linear_velocity = robot_.max_linv_;
   }
 
-// Published to ros in robotControl
-robot_.twist_.linear.x = linear_velocity;
-robot_.twist_.angular.z = angular_velocity;
+  // Published to ros in robotControl
+  robot_.twist_.linear.x = linear_velocity;
+  robot_.twist_.angular.z = angular_velocity;
 }
 
 void TurtleFollow::robotControl()
@@ -186,7 +187,8 @@ void TurtleFollow::robotControl()
     if (tag_)
     {
       std::cout << "Tag Detected" << std::endl;
-      purePursuit(tag_pose_.position.x, tag_pose_.position.z);
+      // purePursuit(tag_pose_.position.x, tag_pose_.position.z);
+      visServo();
     }
     else
     {
@@ -204,6 +206,7 @@ void TurtleFollow::robotControl()
       {
         std::cout << "Reverse" << std::endl;
         purePursuit(tag_pose_.position.x, tag_pose_.position.z);
+        // visServo();
         robot_.twist_.linear.x = -robot_.twist_.linear.x / 5;
       }
     }

@@ -109,7 +109,7 @@ private:
      * 
      * @param 
      */
-    void visServo(geometry_msgs::Pose tag_pose_, geometry_msgs::Pose pose_);
+    void visServo(void);
 
     ros::Subscriber odom_sub_;     //!< ROS subscriber variable for Odometry messages
     ros::Subscriber laser_sub_;    //!< ROS subscriber variable for Laser Scans
