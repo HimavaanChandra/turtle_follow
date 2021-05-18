@@ -114,7 +114,7 @@ private:
     ros::Subscriber tag_sub_;       //!< ROS subscriber variable for AR Tag data
     ros::Publisher cmd_vel_pub_;    //!< ROS publisher variable for Velocity commands
     geometry_msgs::Pose tag_pose_;  //!< Pose variable for AR tag
-    geometry_msgs::Pose pose        //!< Pose variable for Robot Pose
+    geometry_msgs::Pose pose_;        //!< Pose variable for Robot Pose
     bool tag_;                      //!< Bool for tag detection
 
     //!< Struct to capture all Turtlebot3 Waffle data

@@ -32,7 +32,7 @@ void TurtleFollow::laserCallback(const sensor_msgs::LaserScanConstPtr &msg)
 
 void TurtleFollow::odomCallback(const nav_msgs::OdometryConstPtr &msg)
 {
-  geometry_msgs::Pose pose = msg->pose.pose;
+  geometry_msgs::Pose pose_ = msg->pose.pose;
 }
 
 bool TurtleFollow::obstructionDetection()
@@ -138,7 +138,8 @@ void TurtleFollow::visServo(geometry_msgs::Pose tag_pose_, )
   // double angTol = 5.0;
   // double currentAng = 0.0;
 
-  // // Get AR and Robot pose in 3D cords
+  // // AR Pose = tag_pose_
+  // // Robot pose = pose_
 
   // // Calculate tracking pose
   //   //  zARPose + trackDist = trackingPose; 
