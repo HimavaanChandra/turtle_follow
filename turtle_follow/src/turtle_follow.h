@@ -69,12 +69,18 @@ private:
     void laserCallback(const sensor_msgs::LaserScanConstPtr &msg);
 
     /**
+     * @brief Callback function for Robot odometry     * 
+     * @param msg 
+     */
+    void TurtleFollow::odomCallback(const nav_msgs::OdometryConstPtr &msg)
+
+        /**
      * @brief Function to check for obstruction for the safety of the robot
      * 
      * @return true 
      * @return false 
      */
-    bool obstructionDetection();
+        bool obstructionDetection();
 
     /**
      * @brief Function to detect AR tag
@@ -100,15 +106,16 @@ private:
     /**
      * @brief Control based on image based visual servoing to navigate towards the AR tag when detected
      * 
-     * @param centreDistance 
+     * @param 
      */
-    void visServo(double centreDistance);
+    void visServo(geometry_msgs::Pose tag_pose_);
 
-    ros::Subscriber laser_sub_;    //!< ROS subscriber variable for Laser Scans
-    ros::Subscriber tag_sub_;      //!< ROS subscriber variable for AR Tag data
-    ros::Publisher cmd_vel_pub_;   //!< ROS publisher variable for Velocity commands
-    geometry_msgs::Pose tag_pose_; //!< Pose variable for AR tag
-    bool tag_;                     //!< Bool for tag detection
+    ros::Subscriber laser_sub_;     //!< ROS subscriber variable for Laser Scans
+    ros::Subscriber tag_sub_;       //!< ROS subscriber variable for AR Tag data
+    ros::Publisher cmd_vel_pub_;    //!< ROS publisher variable for Velocity commands
+    geometry_msgs::Pose tag_pose_;  //!< Pose variable for AR tag
+    geometry_msgs::Pose pose        //!< Pose variable for Robot Pose
+    bool tag_;                      //!< Bool for tag detection
 
     //!< Struct to capture all Turtlebot3 Waffle data
     struct Robot

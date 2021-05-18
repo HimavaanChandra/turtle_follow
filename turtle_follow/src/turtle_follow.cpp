@@ -30,6 +30,11 @@ void TurtleFollow::laserCallback(const sensor_msgs::LaserScanConstPtr &msg)
   robot_.ranges_ = msg->ranges;
 }
 
+void TurtleFollow::odomCallback(const nav_msgs::OdometryConstPtr &msg)
+{
+  geometry_msgs::Pose pose = msg->pose.pose;
+}
+
 bool TurtleFollow::obstructionDetection()
 {
   // Closest range is set to a high value so it can be over written later on
@@ -125,27 +130,28 @@ void TurtleFollow::purePursuit(double centreDistance, double range)
   robot_.twist_.angular.z = angular_velocity;
 }
 
-void TurtleFollow::visServo(double centreDistance)
+void TurtleFollow::visServo(geometry_msgs::Pose tag_pose_, )
 {
-  // Set tracking distance
-  // Set heading angle tolerance
-  
-  
-  // Get AR and Robot pose in 3D cords
+  // // Set tracking distance
+  // double trackDist = 0.5;
+  // // Set heading angle tolerance
+  // double angTol = 5.0;
+  // double currentAng = 0.0;
 
+  // // Get AR and Robot pose in 3D cords
 
-  // Calculate tracking pose
+  // // Calculate tracking pose
+  //   //  zARPose + trackDist = trackingPose; 
 
+  // // Find angle to point to tracking point
 
-  // Find angle to point to tracking point
+  // // Adjust angular and linear velocity accordingly
+  //   // if abs(ang) > ang_tot
+  //     // Turn and move forward a little
+  //   // else
+  //     // lin_vel = max_lin_vel 
 
-
-    // if abs(ang) > ang_tot
-      // Turn
-    // else
-      // lin_vel = max_lin_vel 
-
-  // Published to ros in robotControl
+  // // Published to ros in robotControl
   // robot_.twist_.linear.x = linear_velocity;
   // robot_.twist_.angular.z = angular_velocity;
 }
