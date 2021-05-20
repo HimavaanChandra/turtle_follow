@@ -29,9 +29,9 @@
 
    3.4) Go to ar\_track_toolbox and open cam.launch
 
-   3.5) Change lines 6-8 to "<arg name="cam\_image\_topic" default="/tb3\_0/camera/rgb/image_raw" />
+   3.5) Change lines 6-8 to <arg name="cam\_image\_topic" default="/tb3\_0/camera/rgb/image_raw" />
 	<arg name="cam\_info\_topic" default="/tb3\_0/camera/rgb/camera_info" />
-	<arg name="output\_frame" default="/tb3\_0/camera\_rgb\_optical_frame" />"
+	<arg name="output\_frame" default="/tb3\_0/camera\_rgb\_optical_frame" />
 
 
 4. In a terminal: 
