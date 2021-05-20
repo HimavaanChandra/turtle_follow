@@ -1,14 +1,13 @@
 # turtle_follow
 ## Turtlebot Following Task
-This project controls a Turtlebot robot with the task of following another Turtlebot.This will be done through the development of a program with the application of sensing, path planning and control.A  Gazebo  simulation  will  also  be  used  allowing  for  a  plethora  of  testing  to  be  conducted  in  a  safe  and controlled environment. This will be donebefore introducing real world testing that could pose a risk to student and staff safety as well as damageto the Turtlebot and surrounding environment. Sensors that will be utilized for this project include an RGB-D sensor for the detection of the other robot and a LiDAR for close range peripheral sensing.
+This project controls a Turtlebot robot with the task of following another Turtlebot.This will be done through the development of a program with the application of sensing, path planning and control.A  Gazebo  simulation  will  also  be  used  allowing  for  a  plethora  of  testing  to  be  conducted  in  a  safe  and controlled environment. This will be done before introducing real world testing that could pose a risk to student and staff safety as well as damage to the Turtlebot and surrounding environment. Sensors that will be utilized for this project include an RGB-D sensor for the detection of the other robot and a LiDAR for close range peripheral sensing.
 
 
 This program and simulation will then be able to be utilized as a template for future following, sensing and movement projects. This involves projects in the automated manufacturing, autonomous mining and farming, public transport,and private civilian transport industries.The application of real-world sensors will also provide experience and knowledge that will prove to bebeneficial for future projects.
 
 ## The Turtle_Follow project is made up of:
-* Main
-* Turtle Follow
-* Gazebo Package
+* Turtle Follow (Main c++ code)
+* Gazebo and Tag Package
 
 ## How to run Gazebo Simulation
 * Prerequisites: ar_track_alvar package
