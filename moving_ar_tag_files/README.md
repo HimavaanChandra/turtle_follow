@@ -25,11 +25,11 @@
 
    3.2) Change line 7 to "laser_sub_ = nh\_.subscribe("/tb3_0/scan", 10, &TurtleFollow::laserCallback, this);"
 
-  3.3) Change line 10 to "cmd\_vel\_pub_ = nh\_.advertise<geometry_msgs::Twist>("/tb3\_0/cmd_vel", 1);"
+   3.3) Change line 10 to "cmd\_vel\_pub_ = nh\_.advertise<geometry_msgs::Twist>("/tb3\_0/cmd_vel", 1);"
 
-  3.4) Go to ar\_track_toolbox and open cam.launch
+   3.4) Go to ar\_track_toolbox and open cam.launch
 
-  3.5) Change lines 6-8 to:
+   3.5) Change lines 6-8 to:
        "<arg name="cam\_image\_topic" default="/tb3\_0/camera/rgb/image_raw" />
 	<arg name="cam\_info\_topic" default="/tb3\_0/camera/rgb/camera_info" />
 	<arg name="output\_frame" default="/tb3\_0/camera\_rgb\_optical_frame" />"
