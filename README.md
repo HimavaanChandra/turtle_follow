@@ -38,12 +38,12 @@ This program and simulation will then be able to be utilized as a template for f
 8. rosrun turtle_follow turtle_follow
 
 ## Contributors & Maintainers
-- Himavaan Chandra
+- Himavaan Chandra 40%
     - AR Tag
     - Control
     - Package Set Up
-- Chloe Mallinson
+- Chloe Mallinson 30%
     - Image Based Visual Servoing
     - Gazebo Set Up
-- Hayden McManus
+- Hayden McManus 30%
     - Gazebo Simulation Package
